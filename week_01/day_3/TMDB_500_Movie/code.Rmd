@@ -1,0 +1,112 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+
+movies <- read.csv("archive/tmdb_5000_movies.csv")
+```
+```{r}
+head(movies)
+```
+```{r}
+names(movies)
+```
+# 1
+First thoughts
+- homepage - missing values
+- revenue - 0 value
+- few factor types
+- popularity - num with decimal shouldn't be double?
+- lot of repetitive values
+
+# 2
+
+```{r}
+movies_selected <-
+movies %>% 
+  select(title,runtime, budget)
+```
+# 3
+Ok, now take your subsetted data movies_selected, and count the number of missing values in each column.
+
+```{r}
+# count the number of missing values in each column
+movies_selected %>% 
+  summarise(count = sum(is.na(movies_selected)))
+```
+
+# 4
+
+```{r}
+movies %>% 
+  filter(runtime == 0) %>% 
+  summarise(count = sum(runtime == 0))
+```
+
+
+```{r}
+movies_runtime<-
+movies %>%
+  mutate(runtime = na_if(runtime, 0))
+  
+```
+```{r}
+movies %>% 
+  summarise(sum(is.na(runtime)))
+```
+
+# 5
+
+```{r}
+movies_imputed <- movies %>% 
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
+
+```
+```{r}
+movies %>% 
+  summarise(sum(is.na(runtime)))
+```
+
+# 6 
+
+```{r}
+movies_imputed %>% 
+  slice_max(runtime, n = 10)
+```
+```{r}
+movies_imputed %>% 
+  slice_min(runtime, n = 10)
+```
+
+# 7
+
+```{r}
+movies%>% 
+  mutate(movies_imputed = if_else(budget < 100, median(budget), budget))
+```
+
+# Extension 1
+
+```{r}
+movie_budgets <- movies %>% 
+  mutate(budget_type = case_when(budget < 12e6 ~ "Small budget",
+                                 budget > 12e6 & budget < 40e6 ~ "Medium budget",
+                                 budget > 40e6 ~ "Big budget"))
+movie_budgets
+```
+# 2
+Take the original dataset with all the variables. Using across and where, summarise the number of missing values, first across all columns of type character, and then across all columns of type numeric.
+```{r}
+movies %>% 
+  group_by(across(where(is.character))) %>% 
+  summarise(sum(is.na = T))
+```
+```{r}
+movies %>% 
+  group_by(across(where(is.numeric))) %>% 
+  summarise(sum(is.na = T))
+```
+
