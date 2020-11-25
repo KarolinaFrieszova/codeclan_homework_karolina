@@ -21,6 +21,28 @@ head(drink_menu)
 ```{r}
 dim(drink_menu)
 ```
+```{r}
+drink_menu %>%
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>% #select variables
+  filter(is.na(Calories)) #check if there are any NA values in the Calories
+```
+```{r}
+drink_menu %>%
+  mutate(calorie_diff = 135 - Calories) #create new column 
+```
+```{r}
+
+calories_by_category <- drink_menu %>%
+  group_by(Beverage_category) %>%
+  summarise(ave_calories = mean(Calories))
+```
+```{r}
+calories_by_category %>%
+  arrange(desc(ave_calories)) %>%
+  head(3)
+```
+
+
 
 2. 
 ```{r}
