@@ -1,0 +1,89 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+drink_menu <- read.csv("data/starbucks_drinkMenu_expanded.csv")
+```
+
+```{r}
+names(drink_menu)
+```
+
+```{r}
+head(drink_menu)
+```
+```{r}
+dim(drink_menu)
+```
+
+2. 
+```{r}
+beverages <- select(drink_menu, Beverage_category, Beverage, Beverage_prep, Calories)
+any(is.na(beverages)) #check if there are any NA values in the data
+```
+
+```{r}
+beverages
+```
+3. 
+
+```{r}
+# new variable called calorie_diff, stores difference between 135 calories and calories in each drink
+drink_menu %>%
+  mutate(calorie_diff = 135 - Calories)
+```
+4. 
+
+```{r}
+drink_menu %>%
+  summarise(average_calories = mean(Calories))
+```
+
+```{r}
+head(arrange(drink_menu, desc(Calories)),3) #3 drinks with most calories
+
+```
+```{r}
+min(drink_menu$Calories) #just displays that min calorie is 0
+head(arrange(drink_menu, Calories),3) # 3 drinks with least calories
+```
+```{r}
+summary(drink_menu)
+```
+
+5. 
+```{r}
+categories<-unique(drink_menu$Beverage_prep)
+length(categories)
+categories
+```
+```{r}
+drink_menu %>%
+  filter(Beverage_prep == "Short")
+  summarise(mean(Calories))
+```
+
+6. 
+
+```{r}
+
+```
+
+7. 
+
+
+```{r}
+head(drink_menu)
+```
+
+```{r}
+coffee_types <- unique(drink_menu$Beverage_category)
+coffee_types
+```
+
