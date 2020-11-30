@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+hat_observations <- read_csv("data/hat_observations.csv")
+exam_scores <- read_csv("data/exam_scores.csv")
+```
+
+```{r}
+tidy_hat_observations <-
+  hat_observations %>%
+  separate(observation,
+           c("hat_colour", "hat_type"),
+           sep = ",")
+```
+
+```{r}
+tidy_hat_observations %>% 
+  unite(date, c("day","month","year"), sep = "/") %>% # unites columns
+  filter(hat_type == "beret") %>% 
+  arrange(desc(observation_count)) # finds date where the most beret where observed
+  
+```
+Read in exam_scores and transform it into long format with two new columns exam_question and score. Then, using separate and select, remove superfluous information from the values in exam_question
+```{r}
+exam_scores %>% 
+  pivot_longer(cols = c(exam_Q1:exam_Q10),
+               names_to = "exam_question",
+               values_to = "score") %>% 
+  separate(exam_question, c("exam", "num_of_question"), sep = "Q") %>% 
+  select(-exam)
+
+
+```
+
