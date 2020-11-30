@@ -1,0 +1,182 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+# read in data using read_csv tidyverse's package version
+
+books <- read_csv("data/books.csv")
+```
+
+```{r}
+# clean column names
+# assigned to new variable
+
+all_books <- clean_names(books)
+
+all_books <- all_books %>% 
+  rename(isbn_13 = isbn13)
+```
+
+# Checking Data
+
+```{r}
+nrow(all_books)
+
+ncol(all_books)
+
+dim(all_books)
+
+names(all_books)
+
+# preview first 10 rows
+
+head(all_books, 10)
+
+tail(all_books, 10)
+
+glimpse(all_books)
+
+# view data in table format
+
+view(all_books)
+
+all_books
+```
+
+```{r}
+# an overview of missing values
+
+all_books %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+```{r}
+all_books %>% 
+  select(book_id, title, num_pages) %>% 
+  filter(num_pages == 0) %>% 
+  summarise(zero_pages = n())
+```
+```{r}
+# sums number of num_pages with value 0
+all_books %>% 
+  filter(num_pages %in% 0) %>% 
+  summarise(count = n())
+```
+
+```{r}
+clean_books <- all_books %>%
+  mutate(num_pages = na_if(num_pages, 0),
+         average_rating = na_if(average_rating, 0.00),
+         isbn = na_if(isbn, "0.00"),
+         publication_date = na_if(publication_date, "0"),
+         publication_date = as.Date(publication_date, "%m/%d/%Y"),
+         publication_year = format(publication_date, "%Y"))
+clean_books
+```
+```{r}
+clean_books %>% 
+   summarise(na_pages = sum(is.na(num_pages)),
+            na_rating = sum(is.na(average_rating)),
+            na_isbn = sum(is.na(isbn)),
+            na_pub_date = sum(is.na(publication_date)))
+```
+
+Each book_id is unique. It's number between 1 smallest to 40146 being the largest.
+Some books have names in other languages or alphabets (like Chinese).
+19 books have average_rating 0.00 as there is no rating 0.00 we can assume that the values are missing, change to NA.
+isbn_13 not all the numbers have 13 digits.
+ratings_count has 62 zero values which I have not changed to NA.
+text_reviews_count has 458 zero values which I have not changed to NA.
+
+# Findings
+
+* Highest number of published books was in 2006 at number 1324.
+```{r}
+clean_books %>% 
+  select(publication_year) %>% 
+  group_by(publication_year) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+```
+* Average book rating was 3.95.
+```{r}
+ave_book_rating <- clean_books %>% 
+  summarise(mean_rating = mean(average_rating, na.rm = T)) %>% 
+  pull()
+```
+
+```{r}
+best_rated_books <- clean_books %>% 
+  filter(average_rating > ave_book_rating)
+```
+
+```{r}
+best_rated_books %>% 
+  select(title, average_rating) %>% 
+  arrange(desc(average_rating))
+  #group_by(average_rating, publisher, language_code) 
+```
+
+
+```{r}
+# these two books have observations under incorrect columns
+
+clean_books %>% 
+  filter(language_code == "9780674842113" | language_code == "9780851742717") 
+```
+
+```{r}
+all_books %>% 
+  select(publisher) %>% 
+  group_by(publisher) %>% 
+  summarise(publisher_count = n())
+```
+
+```{r}
+all_books %>% 
+  select(authors) %>% 
+  group_by(authors) %>% 
+  summarise(authors_count = n()) %>% 
+  arrange(desc(authors_count))
+```
+
+```{r}
+# oldest book
+
+all_books %>% 
+  select(title, publication_date) %>% 
+  arrange(publication_date) %>% 
+  head(2)
+```
+```{r}
+# most recent book
+all_books %>% 
+  select(title, publication_date) %>% 
+  arrange(desc(publication_date)) %>% 
+  head(1)
+```
+
+```{r}
+# to do count all english languages together
+
+all_books %>% 
+  select(language_code) %>% 
+  group_by(language_code) %>% 
+  summarise(languages_count = n()) #%>% 
+  #arrange(desc(languages_count))
+```
+
+```{r}
+all_books %>% 
+  select() %>% 
+  group_by(authors) %>% 
+  summarise(authors_count = n()) %>% 
+  arrange(desc(authors_count))
+```
+
