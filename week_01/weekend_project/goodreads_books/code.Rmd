@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Cleaning & Extra dplyr"
 output: html_notebook
 ---
 
@@ -48,6 +48,9 @@ glimpse(all_books)
 view(all_books)
 
 all_books
+
+# how many missing values
+sum(is.na(all_books))
 ```
 
 ```{r}
@@ -56,6 +59,27 @@ all_books
 all_books %>% 
   summarise(across(.fns = ~sum(is.na(.x))))
 ```
+```{r}
+# how many distinct language codes
+all_books %>% 
+  distinct(language_code) %>% 
+  nrow()
+```
+```{r}
+# how many distinct publishers
+all_books %>% 
+  distinct(publisher) %>% 
+  nrow()
+```
+
+```{r}
+# how many distinct authors
+all_books %>% 
+  distinct(authors) %>% 
+  nrow()
+```
+
+
 ```{r}
 all_books %>% 
   select(book_id, title, num_pages) %>% 
@@ -87,13 +111,6 @@ clean_books %>%
             na_pub_date = sum(is.na(publication_date)))
 ```
 
-Each book_id is unique. It's number between 1 smallest to 40146 being the largest.
-Some books have names in other languages or alphabets (like Chinese).
-19 books have average_rating 0.00 as there is no rating 0.00 we can assume that the values are missing, change to NA.
-isbn_13 not all the numbers have 13 digits.
-ratings_count has 62 zero values which I have not changed to NA.
-text_reviews_count has 458 zero values which I have not changed to NA.
-
 # Findings
 
 * Highest number of published books was in 2006 at number 1324.
@@ -118,9 +135,9 @@ best_rated_books <- clean_books %>%
 
 ```{r}
 best_rated_books %>% 
-  select(title, average_rating) %>% 
-  arrange(desc(average_rating))
-  #group_by(average_rating, publisher, language_code) 
+  select(average_rating, ratings_count, title) %>% 
+  #arrange(desc(average_rating))
+  group_by(average_rating,ratings_count) 
 ```
 
 
@@ -163,20 +180,57 @@ all_books %>%
 ```
 
 ```{r}
-# to do count all english languages together
-
 all_books %>% 
-  select(language_code) %>% 
+  select(language_code) %>%
   group_by(language_code) %>% 
   summarise(languages_count = n()) #%>% 
   #arrange(desc(languages_count))
 ```
 
 ```{r}
-all_books %>% 
-  select() %>% 
-  group_by(authors) %>% 
-  summarise(authors_count = n()) %>% 
-  arrange(desc(authors_count))
+# book with most text reviews is The Giver with 56604 reviews
+
+clean_books %>% 
+  slice_max(text_reviews_count)
+```
+```{r}
+# book with most ratings is The Hobbit with 2530894	ratings
+clean_books %>% 
+  slice_max(ratings_count)
+```
+```{r}
+# Vintage published most books 255
+clean_books %>% 
+  group_by(publisher) %>% 
+  summarise(n_titles = n()) %>% 
+  arrange(desc(n_titles))
+```
+
+```{r}
+# if two Penguins combined they published most books
+
+penguin_names <- c("Penguin Books", "Penguin Classics")
+
+clean_books %>% 
+  filter(publisher %in% penguin_names) %>%
+  nrow()
+```
+
+```{r}
+# longest book in each language
+
+eng_codes <- c("en-CA", "en-GB", "en-US", "eng")
+
+clean_books %>% 
+  mutate(language_code = if_else(language_code %in% eng_codes, "eng", language_code)) %>% # recoding
+  group_by(language_code) %>% 
+  slice_max(num_pages) %>% 
+  select(language_code, num_pages) %>% 
+  arrange(desc(num_pages))
+```
+```{r}
+# author Chaucer published books in 'enm' Middle English language as only author in our dataset
+books %>% 
+  filter(language_code == "enm")
 ```
 
