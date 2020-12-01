@@ -1802,14 +1802,58 @@ summary {
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxu4pSA4pSAIEF0dGFjaGluZyBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDEuMy4wIOKUgOKUgFxu4pyTIGdncGxvdDIgMy4zLjIgICAgIOKckyBwdXJyciAgIDAuMy40XG7inJMgdGliYmxlICAzLjAuNCAgICAg4pyTIGRwbHlyICAgMS4wLjJcbuKckyB0aWR5ciAgIDEuMS4yICAgICDinJMgc3RyaW5nciAxLjQuMFxu4pyTIHJlYWRyICAgMS40LjAgICAgIOKckyBmb3JjYXRzIDAuNS4wXG5wYWNrYWdlIOKAmGdncGxvdDLigJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjYuMnBhY2thZ2Ug4oCYdGliYmxl4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHRpZHly4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHJlYWRy4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHB1cnJy4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmGRwbHly4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjLilIDilIAgQ29uZmxpY3RzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG54IGRwbHlyOjpmaWx0ZXIoKSBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbnggZHBseXI6OmxhZygpICAgIG1hc2tzIHN0YXRzOjpsYWcoKVxuIn0= -->
+<pre><code>Registered S3 methods overwritten by &#39;dbplyr&#39;:
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+── Attaching packages ────────────────────── tidyverse 1.3.0 ──
+✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+✓ tibble  3.0.4     ✓ dplyr   1.0.2
+✓ tidyr   1.1.2     ✓ stringr 1.4.0
+✓ readr   1.4.0     ✓ forcats 0.5.0
+package ‘ggplot2’ was built under R version 3.6.2package ‘tibble’ was built under R version 3.6.2package ‘tidyr’ was built under R version 3.6.2package ‘readr’ was built under R version 3.6.2package ‘purrr’ was built under R version 3.6.2package ‘dplyr’ was built under R version 3.6.2── Conflicts ───────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGF0X29ic2VydmF0aW9ucyA8LSByZWFkX2NzdihcImRhdGEvaGF0X29ic2VydmF0aW9ucy5jc3ZcIilcbmV4YW1fc2NvcmVzIDwtIHJlYWRfY3N2KFwiZGF0YS9leGFtX3Njb3Jlcy5jc3ZcIilcbmBgYCJ9 -->
-<pre class="r"><code>hat_observations &lt;- read_csv(&quot;data/hat_observations.csv&quot;)
-exam_scores &lt;- read_csv(&quot;data/exam_scores.csv&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGF0X29ic2VydmF0aW9ucyA8LSByZWFkX2NzdihcImRhdGEvaGF0X29ic2VydmF0aW9ucy5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>hat_observations &lt;- read_csv(&quot;data/hat_observations.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5jb2xzKFxuICBkYXkgPSBjb2xfZG91YmxlKCksXG4gIG1vbnRoID0gY29sX2RvdWJsZSgpLFxuICB5ZWFyID0gY29sX2RvdWJsZSgpLFxuICBvYnNlcnZhdGlvbiA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgb2JzZXJ2YXRpb25fY291bnQgPSBjb2xfZG91YmxlKClcbilcbiJ9 -->
+<pre><code>
+── Column specification ───────────────────────────────────────
+cols(
+  day = col_double(),
+  month = col_double(),
+  year = col_double(),
+  observation = col_character(),
+  observation_count = col_double()
+)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZXhhbV9zY29yZXMgPC0gcmVhZF9jc3YoXCJkYXRhL2V4YW1fc2NvcmVzLmNzdlwiKVxuYGBgIn0= -->
+<pre class="r"><code>exam_scores &lt;- read_csv(&quot;data/exam_scores.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5jb2xzKFxuICBpZCA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RMSA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RMiA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RMyA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RNCA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RNSA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RNiA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RNyA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9ROCA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9ROSA9IGNvbF9kb3VibGUoKSxcbiAgZXhhbV9RMTAgPSBjb2xfZG91YmxlKClcbilcbiJ9 -->
+<pre><code>
+── Column specification ───────────────────────────────────────
+cols(
+  id = col_double(),
+  exam_Q1 = col_double(),
+  exam_Q2 = col_double(),
+  exam_Q3 = col_double(),
+  exam_Q4 = col_double(),
+  exam_Q5 = col_double(),
+  exam_Q6 = col_double(),
+  exam_Q7 = col_double(),
+  exam_Q8 = col_double(),
+  exam_Q9 = col_double(),
+  exam_Q10 = col_double()
+)</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1825,25 +1869,15 @@ exam_scores &lt;- read_csv(&quot;data/exam_scores.csv&quot;)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlkeV9oYXRfb2JzZXJ2YXRpb25zICU+JSBcbiAgdW5pdGUoZGF0ZSwgYyhcImRheVwiLFwibW9udGhcIixcInllYXJcIiksIHNlcCA9IFwiL1wiKSAlPiUgIyB1bml0ZXMgY29sdW1uc1xuICBmaWx0ZXIoaGF0X3R5cGUgPT0gXCJiZXJldFwiKSAlPiUgXG4gIGFycmFuZ2UoZGVzYyhvYnNlcnZhdGlvbl9jb3VudCkpICMgZmluZHMgZGF0ZSB3aGVyZSB0aGUgbW9zdCBiZXJldCB3aGVyZSBvYnNlcnZlZFxuYGBgIn0= -->
-<pre class="r"><code>tidy_hat_observations %&gt;% 
-  unite(date, c(&quot;day&quot;,&quot;month&quot;,&quot;year&quot;), sep = &quot;/&quot;) %&gt;% # unites columns
-  filter(hat_type == &quot;beret&quot;) %&gt;% 
-  arrange(desc(observation_count)) # finds date where the most beret where observed</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MTEsIm5jb2wiOjR9LCJyZGYiOiJINHNJQUFBQUFBQUFBODFUUVUvQ01CUXVzS0ViZ1dEMDRNR1Rkelk2QmNkSkRzWWZZRFRoWnJwUllhRjBTK2xFYnY1a0wxN0JOMmpKMXZBRGJOSzk5MzE5WDk5cisvYnlOTGx6Snk1Q3FJRWFUZmphNENMNzdmVzVGeUprMVFIVWtJV2N3bjdCOGlVNEZzd3V6SlphY0hEb0QvMmdqME5GdU1IQXgvMkNHZW1RME1kQmhRaUcvcUNzT2IvM2NSazdENGJDeFVNZlYwTmdqMUYxVTBoYUljektISHhNVXoyRHZaNG5rbW9RTVJJdkZHZ3ZjeWFUT0dWcEx1ajBWRVJGMjl4UXh0SzFRbzJTWkNZbzVTY2xXUzR5UnF0eFJua1JGVlQrQTRCUXB5aHJmSXYyWTN4ajJHdkRYaGtXbmJhUFA4cXB0cHpOeVpLdTFGMVlpclNtNUhoMTdwekk5OFBiNkQ0cUdMbkpkTVJGR3EybytDUXlTVGxFNWx3YU9SeVJyajJkcHcyei9nMmYzVzczYXhZVE03TFN4V2pTaFdLSTl5RkFEMmhyU003U3JNZ0xvbnJ4NDlpR3VDWU1vcHZ6b3BKcEw1N25mTkhEZ3lMRGZ2MHcyc3B2bFh6cmtMTytVM3ZadXFzb255WDgyRldNUkpRcDBJRWo3MC9zWlNMaCtvVmRZRmVlVENYUmNTN2NyR2IyaDBQYlB4ZFUzMFl3QkFBQSJ9 -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MTEsIm5jb2wiOjR9LCJyZGYiOiJINHNJQUFBQUFBQUFBODFUd1ZMQ01CQU5wVVZiQnRUUmd3ZFAzcUdrQ3BhVEhCdy93TkVaYms2QUNCMUMya2xUa1p1ZjdNVXJkUXNKMDJiNEFET1Q3cjZYZmRsTnNuMTVHdDk1WXc4aFZFZjFCbndkY0pIejl2cmNDUkd5TFFBMVpDTzNzRit3ZkFtT0RmTWNabE10dURqMEIzN1F3NkVpdktEdjQxN0JESFZJNk9PZ1FnUUR2MS9Xbk43N3VJemRCMFBoNFlHUHF5R3d4N0M2S1NTdEVHWmxMajZrcVo3QldTOGlTVFdZTURKZEt0QmFaVXhHMDVqRm1hQ3pZeEVWYldOREdZdlhDdFZMa3JtZ2xCK1ZKSmxJR0szR0dlVk5xS0R5SHdDRTJrVlpvMXUwRzZNYncxNGI5c3F3NkxoOS9GRk90ZVVjVGxZMFZYZGhLOUtla2NQVmVRc2kzL2R2by91b1lPUW0wUkVYOFNTbDRwUElLT1lRbVhGcDVIQkZ2TzdxUEMyWTFqZDg4anovTll1Wk1wTHFZalRwUVRHayt5RkFEMmhyU0U3aXBNZ0xJcXY0Y1J4RFhCTUdjWmJ4b3BKWlo3ckkrTExUTHhMc2x2ZWpwZnhteWJmM0thMWNiZVhvcHFKOEh2RkRVekV5b1V5Qk5weDRkK0J1SWlLdUg5Z0ROdTNLV0JJZDU4SEZhbVozTnJUOUF6YVhpeE12QkFBQSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["date"],"name":[1],"type":["chr"],"align":["left"]},{"label":["hat_colour"],"name":[2],"type":["chr"],"align":["left"]},{"label":["hat_type"],"name":[3],"type":["chr"],"align":["left"]},{"label":["observation_count"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"18/6/2018","2":"white","3":"beret","4":"9"},{"1":"25/10/2019","2":"black","3":"beret","4":"7"},{"1":"8/12/2019","2":"multicoloured","3":"beret","4":"7"},{"1":"26/5/2018","2":"black","3":"beret","4":"6"},{"1":"4/1/2018","2":"white","3":"beret","4":"6"},{"1":"7/12/2019","2":"yellow","3":"beret","4":"5"},{"1":"16/11/2018","2":"red","3":"beret","4":"5"},{"1":"26/9/2019","2":"green","3":"beret","4":"2"},{"1":"20/2/2019","2":"white","3":"beret","4":"2"},{"1":"18/6/2018","2":"purple","3":"beret","4":"2"},{"1":"14/1/2018","2":"green","3":"beret","4":"1"}],"options":{"columns":{"min":{},"max":[10],"total":[4]},"rows":{"min":[10],"max":[10],"total":[11]},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
-<pre class="r"><code>NA</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Read in exam_scores and transform it into long format with two new columns exam_question and score. Then, using separate and select, remove superfluous information from the values in exam_question</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZXhhbV9zY29yZXMgJT4lIFxuICBwaXZvdF9sb25nZXIoY29scyA9IGMoZXhhbV9RMTpleGFtX1ExMCksXG4gICAgICAgICAgICAgICBuYW1lc190byA9IFwiZXhhbV9xdWVzdGlvblwiLFxuICAgICAgICAgICAgICAgdmFsdWVzX3RvID0gXCJzY29yZVwiKSAlPiUgXG4gIHNlcGFyYXRlKGV4YW1fcXVlc3Rpb24sIGMoXCJleGFtXCIsIFwibnVtX29mX3F1ZXN0aW9uXCIpLCBzZXAgPSBcIlFcIikgJT4lIFxuICBzZWxlY3QoLWV4YW0pXG5gYGAifQ== -->
@@ -1869,7 +1903,7 @@ NA</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCmBgYHtyfQpoYXRfb2JzZXJ2YXRpb25zIDwtIHJlYWRfY3N2KCJkYXRhL2hhdF9vYnNlcnZhdGlvbnMuY3N2IikKZXhhbV9zY29yZXMgPC0gcmVhZF9jc3YoImRhdGEvZXhhbV9zY29yZXMuY3N2IikKYGBgCgpgYGB7cn0KdGlkeV9oYXRfb2JzZXJ2YXRpb25zIDwtCiAgaGF0X29ic2VydmF0aW9ucyAlPiUKICBzZXBhcmF0ZShvYnNlcnZhdGlvbiwKICAgICAgICAgICBjKCJoYXRfY29sb3VyIiwgImhhdF90eXBlIiksCiAgICAgICAgICAgc2VwID0gIiwiKQpgYGAKCmBgYHtyfQp0aWR5X2hhdF9vYnNlcnZhdGlvbnMgJT4lIAogIHVuaXRlKGRhdGUsIGMoImRheSIsIm1vbnRoIiwieWVhciIpLCBzZXAgPSAiLyIpICU+JSAjIHVuaXRlcyBjb2x1bW5zCiAgZmlsdGVyKGhhdF90eXBlID09ICJiZXJldCIpICU+JSAKICBhcnJhbmdlKGRlc2Mob2JzZXJ2YXRpb25fY291bnQpKSAjIGZpbmRzIGRhdGUgd2hlcmUgdGhlIG1vc3QgYmVyZXQgd2hlcmUgb2JzZXJ2ZWQKICAKYGBgClJlYWQgaW4gZXhhbV9zY29yZXMgYW5kIHRyYW5zZm9ybSBpdCBpbnRvIGxvbmcgZm9ybWF0IHdpdGggdHdvIG5ldyBjb2x1bW5zIGV4YW1fcXVlc3Rpb24gYW5kIHNjb3JlLiBUaGVuLCB1c2luZyBzZXBhcmF0ZSBhbmQgc2VsZWN0LCByZW1vdmUgc3VwZXJmbHVvdXMgaW5mb3JtYXRpb24gZnJvbSB0aGUgdmFsdWVzIGluIGV4YW1fcXVlc3Rpb24KYGBge3J9CmV4YW1fc2NvcmVzICU+JSAKICBwaXZvdF9sb25nZXIoY29scyA9IGMoZXhhbV9RMTpleGFtX1ExMCksCiAgICAgICAgICAgICAgIG5hbWVzX3RvID0gImV4YW1fcXVlc3Rpb24iLAogICAgICAgICAgICAgICB2YWx1ZXNfdG8gPSAic2NvcmUiKSAlPiUgCiAgc2VwYXJhdGUoZXhhbV9xdWVzdGlvbiwgYygiZXhhbSIsICJudW1fb2ZfcXVlc3Rpb24iKSwgc2VwID0gIlEiKSAlPiUgCiAgc2VsZWN0KC1leGFtKQoKCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCmBgYHtyfQpoYXRfb2JzZXJ2YXRpb25zIDwtIHJlYWRfY3N2KCJkYXRhL2hhdF9vYnNlcnZhdGlvbnMuY3N2IikKZXhhbV9zY29yZXMgPC0gcmVhZF9jc3YoImRhdGEvZXhhbV9zY29yZXMuY3N2IikKYGBgCgpgYGB7cn0KdGlkeV9oYXRfb2JzZXJ2YXRpb25zIDwtCiAgaGF0X29ic2VydmF0aW9ucyAlPiUKICBzZXBhcmF0ZShvYnNlcnZhdGlvbiwKICAgICAgICAgICBjKCJoYXRfY29sb3VyIiwgImhhdF90eXBlIiksCiAgICAgICAgICAgc2VwID0gIiwiKQpgYGAKCmBgYHtyfQojIGluaXRpYWwgYXBwcm9hY2g6CnRpZHlfaGF0X29ic2VydmF0aW9ucyAlPiUgCiAgdW5pdGUoZGF0ZSwgYygiZGF5IiwibW9udGgiLCJ5ZWFyIiksIHNlcCA9ICIvIikgJT4lICMgdW5pdGVzIGNvbHVtbnMKICBmaWx0ZXIoaGF0X3R5cGUgPT0gImJlcmV0IikgJT4lIAogIGFycmFuZ2UoZGVzYyhvYnNlcnZhdGlvbl9jb3VudCkpICMgZmluZHMgZGF0ZSB3aGVyZSB0aGUgbW9zdCBiZXJldCB3aGVyZSBvYnNlcnZlZAogIAojIGNvcnJlY3QgYXBwcm9hY2gKdGlkeV9oYXRfb2JzZXJ2YXRpb25zICU+JSAKICB1bml0ZSgiZGF0ZSIsIGRheTp5ZWFyLCBzZXAgPSAiLyIpICU+JSAKICBmaWx0ZXIoaGF0X3R5cGUgPT0gImJlcmV0IikgJT4lIAogIGdyb3VwX2J5KGRhdGUpICU+JSAKICBzdW1tYXJpc2UodG90YWwgPSBzdW0ob2JzZXJ2YXRpb25fY291bnQpKSAlPiUgCiAgc2xpY2VfbWF4KHRvdGFsKQpgYGAKCmBgYHtyfQpleGFtX3Njb3JlcyAlPiUgCiAgcGl2b3RfbG9uZ2VyKGNvbHMgPSBjKGV4YW1fUTE6ZXhhbV9RMTApLAogICAgICAgICAgICAgICBuYW1lc190byA9ICJleGFtX3F1ZXN0aW9uIiwKICAgICAgICAgICAgICAgdmFsdWVzX3RvID0gInNjb3JlIikgJT4lIAogIHNlcGFyYXRlKGV4YW1fcXVlc3Rpb24sIGMoImV4YW0iLCAibnVtX29mX3F1ZXN0aW9uIiksIHNlcCA9ICJRIikgJT4lIAogIHNlbGVjdCgtZXhhbSkKCgpgYGAKCg==</div>
 
 
 
