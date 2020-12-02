@@ -1,0 +1,47 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+rtweets <- read.csv("data/code_clan_tweets.csv")
+names(rtweets)
+nrow(rtweets)
+ncol(rtweets)
+```
+
+
+```{r}
+# ?exclude certain rows from favorite_counts that are from is_quote
+rtweets %>% 
+  select(favorite_count) %>% 
+  summarise(total = sum(favorite_count))
+```
+
+
+
+```{r}
+rtweets %>%
+  summarise(mean_retweet_count = mean(retweet_count, na.rm = TRUE))
+```
+```{r}
+rtweets %>% 
+  select(source) %>% 
+  group_by(source) %>% 
+  summarise(source_types = n())
+```
+
+
+
+```{r}
+rtweets %>% 
+  select(favorite_count, media_type) %>% 
+  distinct(media_type)
+```
+
+
+
