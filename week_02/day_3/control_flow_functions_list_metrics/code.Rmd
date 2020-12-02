@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+three_days_weather <- list(
+  Thursday = list(temperature = 3, chance_of_rain = 90, wind_speed = 13),
+  Friday = list(temperature = 5, chance_of_rain = 86, wind_speed = 24),
+  Saturday = list(temperature = 5, chance_of_rain = 88, wind_speed = 16)
+)
+names(three_days_weather)
+```
+
+```{r}
+# The chance of rain tomorrow
+three_days_weather$Thursday$chance_of_rain
+
+#The wind speed on the day after tomorrow
+three_days_weather$Friday$wind_speed
+
+# The temperature tomorrow.
+three_days_weather$Thursday$temperature
+
+```
+
+
+```{r}
+fourteen_day_forcast <- matrix(c(3, 5, 5, 3, 3, 3, 4, 4, 5, 6, 3, 2, 2, 8), nrow = 2, ncol = 7, byrow = TRUE)
+fourteen_day_forcast
+```
+
+
+```{r}
+# The third day of the second week
+fourteen_day_forcast[2, 3]
+
+# The whole second week
+fourteen_day_forcast[2, c(1:7)]
+
+# The first, third and fifth days in both weeks.
+fourteen_day_forcast[ , c(1, 3, 4)]
+```
+
+
+```{r}
+x <- "c"
+is_char_or_num <- function(x){
+  if (is.numeric(x) == TRUE){
+    if (x > 10){
+      print(x/10)
+    } else {
+      print(x)
+    }
+  } else {
+    print(str_c("The answer is: ", x))
+  }
+}
+is_char_or_num(x)
+```
+
+
+```{r}
+compare_two_vectors <- function(x, y){
+  if (identical(x, y) == TRUE){
+    print("Exactly the same")
+  } else if (all(x %in% y)) {
+    print("The same")
+  } else {
+    print("Different")
+  }
+}
+compare_two_vectors(c(10, 2, 3, 4, 1, 6), c(10, 2, 3, 4, 1, 6))
+```
+
+# Extension
+
+```{r}
+print_multiplication_table <- function(x){
+  if (x <= 12){
+    
+  }
+}
+```
+
+
+
+```{r}
+create_art_histogram <- function(x){
+  #x <- as.list(x)
+  for (i in x){
+    print(i,"\n")
+  }
+}
+create_art_histogram(c("*","*","*","*","*","*"))
+```
+
