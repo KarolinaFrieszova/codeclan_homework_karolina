@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Tivyverse"
 output: html_notebook
 ---
 
@@ -14,34 +14,69 @@ nrow(rtweets)
 ncol(rtweets)
 ```
 
-
 ```{r}
-# ?exclude certain rows from favorite_counts that are from is_quote
+# count total number if favourites, don't include tweets that are quoted
 rtweets %>% 
-  select(favorite_count) %>% 
+  filter(is_quote == FALSE) %>% 
   summarise(total = sum(favorite_count))
 ```
 
-
-
 ```{r}
+# summarise mean number by source 
+
 rtweets %>%
-  summarise(mean_retweet_count = mean(retweet_count, na.rm = TRUE))
+  filter(is_quote == FALSE) %>% # omit quoted tweets
+  group_by(source) %>% # split by the type
+  summarise(average_retweet = mean(retweet_count))
 ```
-```{r}
-rtweets %>% 
-  select(source) %>% 
-  group_by(source) %>% 
-  summarise(source_types = n())
-```
-
-
 
 ```{r}
 rtweets %>% 
-  select(favorite_count, media_type) %>% 
-  distinct(media_type)
+  mutate(media_type2 = replace_na(media_type, "text")) %>% 
+  group_by(media_type2) %>% 
+  summarise(favorite_count_total = sum(favorite_count)) %>% 
+  arrange(desc(favorite_count_total))
 ```
 
+```{r}
+rtweets %>% 
+  summarise(avg_tweet_length = mean(display_text_width))
+```
+```{r}
+codeclan_info <- read_csv("data/code_clan_info.csv")
+```
+
+
+```{r}
+codeclan_all <- left_join(rtweets, codeclan_info, by = "tweet_id")
+codeclan_all
+```
+
+```{r}
+codeclan_hashtags <- codeclan_all%>% 
+  select(tweet_id, hashtags) %>%
+  mutate(lowcase_hashtag = str_to_lower(hashtags)) %>%
+  select(-hashtags) %>%
+  drop_na(lowcase_hashtag)
+
+head(codeclan_hashtags)
+```
+
+```{r}
+# use the str_sub function to get the first 2 letters of each tweet
+
+hashtags_multiple <- codeclan_hashtags %>% 
+  mutate(first_letters = str_sub(lowcase_hashtag, 1, 2)) %>%
+  filter(str_detect(first_letters, "c\\("))
+
+head(hashtags_multiple)
+```
+
+```{r}
+user_pattern <- "@[a-zA-Z0-9_]+"
+tweets <- rtweets %>% 
+  select(text)
+head(str_extract_all(tweets$text, user_pattern))
+```
 
 
