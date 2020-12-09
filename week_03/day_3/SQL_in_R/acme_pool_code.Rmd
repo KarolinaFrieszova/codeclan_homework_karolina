@@ -1,0 +1,106 @@
+---
+title: "SQL & Programming"
+output: html_notebook
+---
+3.
+```{r}
+source("~/acme_credentials.R")
+```
+
+```{r}
+library(RPostgres)
+```
+
+```{r}
+db_connection = dbConnect(
+  drv = Postgres(), 
+  user = acme_username,
+  password = acme_password,
+  dbname = acme_database,
+  host = acme_host,
+  port = acme_port,
+  bigint = "numeric"
+)
+```
+
+```{r}
+rm(acme_database, acme_host, acme_password, acme_port, acme_username)
+```
+
+```{r}
+dbListTables(conn = db_connection)
+```
+
+```{r}
+dbListFields(conn = db_connection, name = "employees")
+```
+
+4. 
+```{sql, connection = db_connection}
+SELECT 
+  id,
+  CONCAT(first_name,' ' ,last_name) AS full_name,
+  email,
+  team_id
+FROM employees
+```
+5.
+```{sql, connection = db_connection}
+SELECT 
+  id,
+  first_name,
+  last_name,
+  email,
+  team_id AS team_name
+FROM employees
+```
+6. 
+```{sql, connection = db_connection}
+SELECT
+  team_id,
+  COUNT(id) AS num_employees
+FROM employees
+GROUP BY team_id
+```
+7.
+```{sql, connection = db_connection}
+SELECT *
+FROM employees
+WHERE email NOT LIKE '%@%' OR email IS NULL
+```
+```{sql, connection = db_connection}
+SELECT * FROM feedbacks
+```
+9.
+```{sql, connection = db_connection}
+SELECT
+  e.id,
+  e.first_name,
+  e.last_name,
+  f.date
+FROM employees AS e INNER JOIN feedbacks AS f
+ON e.id = f.employee_id
+ORDER BY date DESC
+```
+10.
+```{sql, connection = db_connection}
+SELECT
+  t.name,
+  COUNT(e.id) AS num_employees
+FROM employees AS e INNER JOIN teams AS t
+ON e.team_id = t.id
+WHERE e.first_name LIKE '_'
+GROUP BY t.name
+ORDER BY COUNT(e.id) DESC
+LIMIT 1
+```
+
+```{r}
+#dbDisconnect(conn = db_connection)
+```
+
+```{r}
+employees_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM employees")
+feedbacks_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM feedbacks")
+```
+
