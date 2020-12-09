@@ -9,6 +9,7 @@ source("~/acme_credentials.R")
 
 ```{r}
 library(RPostgres)
+library(tidyverse)
 ```
 
 ```{r}
@@ -100,7 +101,37 @@ LIMIT 1
 ```
 
 ```{r}
-employees_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM employees")
 feedbacks_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM feedbacks")
+```
+
+11.
+```{r}
+review <- as.character(feedbacks_table$message)
+
+review <- str_to_lower(review)
+review <- str_remove_all(review, "[\\.,!?]")
+review <- str_replace_all(review, "-", " ")
+review <- str_squish(review)
+review <- str_trim(review)
+review
+
+positive_words <- c("great", "good", "happy", "content", "fulfilled", "fulfilling", "positive", "positives", "cheerful", "nice", "ambition", "ambitions", "ambitious", "progress", "joy", "fast", "achieve", "achieving", "achievements", "best", "better",  "unlimited", "pros", "competitive", "opportunity", "advancement", "friendly", "smart", "interesting", "challenging", "grow", "caring", "balance", "helpful", "advantage", "learning", "ethical", "responsible", "responsibilities")
+
+negative_words <- c("worse", "worsening", "worst", "slow", "sluggish", "impatient", "unfulfilled", "unfulfilling", "negative", "bad", "limited", "limit", "limitations", "cons", "frustrated", "frustrating", "frustration", "dull", "boring", "politics", "political", "ignore", "ignored", "ignoring", "sad", "depressed", "depressing", "nasty", "stress", "stresses", "stressed", "stressful", "horrid", "horrible", "terrible", "deadline", "deadlines", "uncaring", "remote", "difficult", "difficulties", "bully", "bullying")
+
+
+searching_feedback <- function(x) {
+  score <- 0
+  
+  for (word in x){
+    if (word %in% positive_words){
+      score = score + 1
+    } else if (word %in% negative_words) {
+      score = score - 1
+    }
+  }
+  return(score)
+}
+searching_feedback(review)
 ```
 
