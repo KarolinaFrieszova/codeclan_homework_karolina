@@ -97,10 +97,6 @@ LIMIT 1
 ```
 
 ```{r}
-#dbDisconnect(conn = db_connection)
-```
-
-```{r}
 feedbacks_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM feedbacks")
 ```
 
@@ -113,6 +109,9 @@ review <- str_remove_all(review, "[\\.,!?]")
 review <- str_replace_all(review, "-", " ")
 review <- str_squish(review)
 review <- str_trim(review)
+review <- str_split(review, " ")
+review <- str_remove_all(review, "[\\\]")
+review <- flatten_chr(review)
 review
 
 positive_words <- c("great", "good", "happy", "content", "fulfilled", "fulfilling", "positive", "positives", "cheerful", "nice", "ambition", "ambitions", "ambitious", "progress", "joy", "fast", "achieve", "achieving", "achievements", "best", "better",  "unlimited", "pros", "competitive", "opportunity", "advancement", "friendly", "smart", "interesting", "challenging", "grow", "caring", "balance", "helpful", "advantage", "learning", "ethical", "responsible", "responsibilities")
@@ -133,5 +132,9 @@ searching_feedback <- function(x) {
   return(score)
 }
 searching_feedback(review)
+```
+
+```{r}
+#dbDisconnect(conn = db_connection)
 ```
 
