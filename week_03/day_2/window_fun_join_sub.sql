@@ -72,15 +72,23 @@ ON teams.id = team_sizes.id
 
 /* 7. How would you amend your query from question 6 above to show only those teams with a total_day_charge greater than 5000? */
 
+SELECT 
+  t.name,
+  COUNT(e.id) * CAST(t.charge_cost AS INT) AS total_day_charge
+FROM employees AS e INNER JOIN teams AS t
+ON e.team_id = t.id
+GROUP BY t.id
+HAVING COUNT(e.id) * CAST(t.charge_cost AS INT) > 5000
 
+-- EXTENSION
 
-/*  How many of the employees serve on one or more committees? */
-/* how many employees serve per committees, if employee serves in one or more count */
+/*  1. How many of the employees serve on one or more committees? */
 
-SELECT DISTINCT(COUNT(employee_id))
+SELECT
+	COUNT(DISTINCT(employee_id)) AS num_employees_on_committee
 FROM employees_committees
-GROUP BY committee_id
 
+/* 2. How many of the employees do not serve on a committee? */
 
 
 
