@@ -7,6 +7,7 @@ output: html_notebook
 library(tidyverse)
 ```
 
+Create three day weather forecast.
 
 ```{r}
 three_days_weather <- list(
@@ -29,6 +30,7 @@ three_days_weather$Thursday$temperature
 
 ```
 
+Find a 14 day forecast online and create a matrix of the forecasts for temperature, where each week is one row and columns correspond to days.
 
 ```{r}
 fourteen_day_forcast <- matrix(c(3, 5, 5, 3, 3, 3, 4, 4, 5, 6, 3, 2, 2, 8), nrow = 2, ncol = 7, byrow = TRUE)
@@ -41,15 +43,15 @@ fourteen_day_forcast
 fourteen_day_forcast[2, 3]
 
 # The whole second week
-fourteen_day_forcast[2, c(1:7)]
+fourteen_day_forcast[2, c(1:7)] # or [2, ]
 
 # The first, third and fifth days in both weeks.
 fourteen_day_forcast[ , c(1, 3, 4)]
 ```
 
+Write a function that pre-appends “The answer is:” to any character input, while for numeric input, it either just returns the number for numbers less than 10, or divides the number by 10 for numbers greater than 10. For anything else return “Invalid input”.
 
 ```{r}
-x <- "c"
 is_char_or_num <- function(x){
   if (is.numeric(x) == TRUE){
     if (x > 10){
@@ -58,12 +60,16 @@ is_char_or_num <- function(x){
       print(x)
     }
   } else {
-    print(str_c("The answer is: ", x))
+    paste("The answer is: ", x)
   }
 }
-is_char_or_num(x)
+
+is_char_or_num(12)
+is_char_or_num("Hello")
+is_char_or_num(8)
 ```
 
+Write a function which checks if two vectors have the same elements.
 
 ```{r}
 compare_two_vectors <- function(x, y){
@@ -77,26 +83,82 @@ compare_two_vectors <- function(x, y){
 }
 compare_two_vectors(c(10, 2, 3, 4, 1, 6), c(10, 2, 3, 4, 1, 6))
 ```
+```{r}
+a <- c(1, 2, 3, 4, 5)
+b <- c(1, 4, 2, 3, 5)
+c <- c(9, 4, 8, 1, 0)
+
+compare_two_vectors(a, b)
+compare_two_vectors(a, c)
+compare_two_vectors(a, a)
+```
+
+
+GO THROUGH ENTENSION:
 
 # Extension
+
+Write code that prints a multiplication table for numbers up to 12. i.e. there will be 12 rows and 12 columns, and each element should be the row number multiplied by the column number.
 
 ```{r}
 print_multiplication_table <- function(x){
   if (x <= 12){
+    outer(1:12, 1:12, "*")
+  }
+}
+print_multiplication_table(12)
+```
+
+```{r}
+tbl <- outer(1:12, 1:12, "*")
+rownames(tbl) <- paste(1:12, "'s", sep="")
+tbl
+```
+```{r}
+# alternatve way 
+
+mult_table <- matrix(nrow = 12, ncol = 12)
+
+for (outer_factor in 1:12){
+  for (inner_factor in 1:12){
+    mult_table[outer_factor, inner_factor] = outer_factor * inner_factor
+  }
+}
+
+mult_table
+```
+```{r}
+# another way
+
+mult_table <- matrix(1:12) %*% t(matrix(1:12))
+mult_table
+```
+
+Write a function that takes a vector, and creates a text art histogram, like the one below.
+
+```{r}
+make_histogram <- function(x){
+  
+  distinct <- sort(unique(x))
+  
+  for (i in distinct){
     
+    count <- sum(x == i)
+    
+    cat(i)
+    cat(" | ")
+    cat(rep("*", count))
+    cat("\n")
   }
 }
 ```
 
-
+```{r}
+numbers <- sample(1:7, size = 80, replace = TRUE) 
+numbers
+```
 
 ```{r}
-create_art_histogram <- function(x){
-  #x <- as.list(x)
-  for (i in x){
-    print(i,"\n")
-  }
-}
-create_art_histogram(c("*","*","*","*","*","*"))
+make_histogram(numbers)
 ```
 
