@@ -20,8 +20,8 @@ db_connection = dbConnect(
   dbname = acme_database,
   host = acme_host,
   port = acme_port,
-  bigint = "numeric"
-)
+  sslmode = 'require',
+  bigint = "numeric")
 ```
 
 ```{r}
@@ -36,7 +36,8 @@ dbListTables(conn = db_connection)
 dbListFields(conn = db_connection, name = "employees")
 ```
 
-4. 
+4. The records of all employees, adding a field full_name containing the first_name and last_name of each employee separated by a space.
+
 ```{sql, connection = db_connection}
 SELECT 
   id,
@@ -45,34 +46,58 @@ SELECT
   team_id
 FROM employees
 ```
-5.
+5. All employees records again, but this time listing their team name (as team_name), rather than their team_id. 
+
 ```{sql, connection = db_connection}
 SELECT 
-  id,
-  first_name,
-  last_name,
-  email,
-  team_id AS team_name
-FROM employees
+  e.id,
+  e.first_name,
+  e.last_name,
+  e.email,
+  t.name AS team_name
+FROM employees AS e LEFT JOIN teams AS t
+ON e.team_id = t.id
 ```
-6. 
+6. A breakdown of the number of employees per team. The table is ordered by decreasing number of employees. Include all teams, even if they have no employees.
+
 ```{sql, connection = db_connection}
 SELECT
   team_id,
   COUNT(id) AS num_employees
 FROM employees
 GROUP BY team_id
+ORDER BY COUNT(id) DESC
 ```
-7.
+Alternative way
+
+```{sql, connection = db_connection}
+SELECT
+  t.name AS team_name,
+  COUNT(e.id) AS num_employees
+FROM employees AS e RIGHT JOIN teams AS t
+ON e.team_id = t.id
+GROUP BY t.id
+ORDER BY COUNT(e.id) DESC
+```
+
+7. The employees that the managment cannot send an email because their email addresses may be invalid (in that they don’t contain an ‘@’ symbol), or they may not have a stored email address at all.
+
 ```{sql, connection = db_connection}
 SELECT *
 FROM employees
 WHERE email NOT LIKE '%@%' OR email IS NULL
 ```
+
+Alternative way
+
 ```{sql, connection = db_connection}
-SELECT * FROM feedbacks
+SELECT * 
+FROM employees
+WHERE email !~ '[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+' OR email IS NULL
 ```
-9.
+
+9. The employees that provided the most recent feedback with the date of this feedback.
+
 ```{sql, connection = db_connection}
 SELECT
   e.id,
@@ -83,7 +108,8 @@ FROM employees AS e INNER JOIN feedbacks AS f
 ON e.id = f.employee_id
 ORDER BY date DESC
 ```
-10.
+10. Team with the highest number of employees with only a single initial for their first_names.
+
 ```{sql, connection = db_connection}
 SELECT
   t.name,
@@ -95,12 +121,141 @@ GROUP BY t.name
 ORDER BY COUNT(e.id) DESC
 LIMIT 1
 ```
+Alternative way
 
+```{sql, connection = db_connection}
+WITH counts_only_first_initial(team_name, num_only_first_initial) AS (
+  SELECT 
+    t.name,
+    COUNT(e.id)
+  FROM employees AS e LEFT JOIN teams AS t
+  ON e.team_id = t.id
+  WHERE e.first_name LIKE '_'
+  GROUP BY t.name
+)
+SELECT 
+  team_name,
+  num_only_first_initial
+FROM counts_only_first_initial
+WHERE num_only_first_initial = (
+  SELECT 
+    MAX(num_only_first_initial)
+  FROM counts_only_first_initial
+)
+```
+
+11. Combining SQL and R coding - basic sentiment analysis
+
+```{r}
+positive_words <- c("great", "good", "happy", "content", "fulfilled", "fulfilling", "positive", "positives", "cheerful", "nice", "ambition", "ambitions", "ambitious", "progress", "joy", "fast", "achieve", "achieving", "achievements", "best", "better",  "unlimited", "pros", "competitive", "opportunity", "advancement", "friendly", "smart", "interesting", "challenging", "grow", "caring", "balance", "helpful", "advantage", "learning", "ethical", "responsible", "responsibilities")
+
+negative_words <- c("worse", "worsening", "worst", "slow", "sluggish", "impatient", "unfulfilled", "unfulfilling", "negative", "bad", "limited", "limit", "limitations", "cons", "frustrated", "frustrating", "frustration", "dull", "boring", "politics", "political", "ignore", "ignored", "ignoring", "sad", "depressed", "depressing", "nasty", "stress", "stresses", "stressed", "stressful", "horrid", "horrible", "terrible", "deadline", "deadlines", "uncaring", "remote", "difficult", "difficulties", "bully", "bullying")
+```
+
+```{sql, connection = db_connection}
+SELECT
+  e.*, 
+  f.message,
+  f.id AS message_id,
+  t.name AS team_name
+FROM employees AS e LEFT JOIN teams AS t
+ON e.team_id = t.id INNER JOIN feedbacks AS f
+ON f.employee_id = e.id
+```
+```{r}
+employees_teams_feedbacks <- dbGetQuery(conn = db_connection, statement = "SELECT
+  e.*, 
+  f.message,
+  f.id AS message_id,
+  t.name AS team_name
+FROM employees AS e LEFT JOIN teams AS t
+ON e.team_id = t.id INNER JOIN feedbacks AS f
+ON f.employee_id = e.id")
+```
+
+```{r}
+# clean the messages
+employees_teams_feedbacks <- employees_teams_feedbacks %>%
+  mutate(
+    message = str_to_lower(message),
+    message = str_remove_all(message, "[[:punct:]]"), # remove punctuation
+    message = str_squish(message), # all internal whitespace goes to single space
+    message = str_trim(message) # leading and trailing whitespace removed
+  )
+```
+
+```{r}
+# create a tibble containing positive and negative words and their scores
+sentiment_words <- tibble(
+  word = positive_words,
+  score = 1
+) %>% bind_rows(
+  tibble(
+    word = negative_words,
+    score = -1
+  )
+)
+
+sentiment_words
+```
+```{r}
+# split messages to words, unnest words to individual rows, 
+# join to sentiment_words tibble matching on word, group word scores for each message
+# and then sum to get total message scores
+message_scores <- employees_teams_feedbacks %>%
+  mutate(
+    word = str_split(message, " ")
+  ) %>%
+  unnest_longer(word) %>%
+  inner_join(sentiment_words, by = "word") %>%
+  group_by(message_id) %>%
+  summarise(score = sum(score))
+```
+
+```{r}
+message_scores
+```
+```{r}
+# join message scores back to original tibble matching on message_id
+# fill in any missing scores as zero.
+employees_teams_feedbacks_scores <- employees_teams_feedbacks %>%
+  left_join(message_scores, by = "message_id") %>%
+  mutate(score = replace_na(score, 0))
+
+employees_teams_feedbacks_scores
+```
+
+```{r}
+employees_teams_feedbacks_scores %>%
+  filter(score == max(score)) %>%
+  select(team_name)
+```
+
+```{r}
+employees_teams_feedbacks_scores %>%
+  filter(score == min(score)) %>%
+  select(team_name)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Try and fail area:
 ```{r}
 feedbacks_table <- dbGetQuery(conn = db_connection, statement = "SELECT * FROM feedbacks")
 ```
 
-11.
+
 ```{r}
 review <- as.character(feedbacks_table$message)
 
