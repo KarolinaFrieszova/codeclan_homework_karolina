@@ -1806,8 +1806,10 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnR3ZWV0cyA8LSByZWFkLmNzdihcImRhdGEvY29kZV9jbGFuX3R3ZWV0cy5jc3ZcIilcbm5hbWVzKHJ0d2VldHMpXG5ucm93KHJ0d2VldHMpXG5uY29sKHJ0d2VldHMpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnR3ZWV0cyA8LSByZWFkLmNzdihcImRhdGEvY29kZV9jbGFuX3R3ZWV0cy5jc3ZcIilcbmNvZGVjbGFuX2luZm8gPC0gcmVhZF9jc3YoXCJkYXRhL2NvZGVfY2xhbl9pbmZvLmNzdlwiKVxuXG5uYW1lcyhydHdlZXRzKVxubnJvdyhydHdlZXRzKVxubmNvbChydHdlZXRzKVxuYGBgIn0= -->
 <pre class="r"><code>rtweets &lt;- read.csv(&quot;data/code_clan_tweets.csv&quot;)
+codeclan_info &lt;- read_csv(&quot;data/code_clan_info.csv&quot;)
+
 names(rtweets)
 nrow(rtweets)
 ncol(rtweets)</code></pre>
@@ -1816,26 +1818,36 @@ ncol(rtweets)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb3VudCB0b3RhbCBudW1iZXIgaWYgZmF2b3VyaXRlcywgZG9uJ3QgaW5jbHVkZSB0d2VldHMgdGhhdCBhcmUgcXVvdGVkXG5ydHdlZXRzICU+JSBcbiAgZmlsdGVyKGlzX3F1b3RlID09IEZBTFNFKSAlPiUgXG4gIHN1bW1hcmlzZSh0b3RhbCA9IHN1bShmYXZvcml0ZV9jb3VudCkpXG5gYGAifQ== -->
-<pre class="r"><code># count total number if favourites, don&#39;t include tweets that are quoted
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb3VudCB0b3RhbCBudW1iZXIgb2YgZmF2b3VyaXRlIHR3ZWV0cywgZG9uJ3QgaW5jbHVkZSB0d2VldHMgdGhhdCBhcmUgcXVvdGVkXG5cbnJ0d2VldHMgJT4lIFxuICBmaWx0ZXIoaXNfcXVvdGUgPT0gRkFMU0UpICU+JSBcbiAgc3VtbWFyaXNlKHRvdGFsID0gc3VtKGZhdm9yaXRlX2NvdW50KSlcbmBgYCJ9 -->
+<pre class="r"><code># count total number of favourite tweets, don&#39;t include tweets that are quoted
+
 rtweets %&gt;% 
   filter(is_quote == FALSE) %&gt;% 
   summarise(total = sum(favorite_count))</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MX0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVFXd3JDTUJEY1BsSnBRU2w0amdaRUJBOGdIa0FVK2h0cjFXSk1TcHVpVi9LUzFVMmJnTTFIa3QzSnptUW1oMTIrVHZJRUFBSUlJdHdKbGtCT3gzMjJCUWg5YkR3SUlkYm5HNitYQXdBd0gwL3Y0d3dSd1o1bGkwWDZEeXFwR0hjbTQwYStxSjAyY25wTjVRck9XbGN1dVRERjZMVkJMbmE5UTVuSldsVlNJTW5YWm9sRDlob0hTRHVoWFZ5eTR0NkpSN2JhNkJlTUhaaGFjMjM2WDZORmpGWlVpbHNsU211ZXMzUEpUYlBBdUVOYVdqZVZVRFlLb2kwZHY4Y2doZVFXR2NKQi93TzdzLzgvcEFFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["total"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"425"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnR3ZWV0cyAlPiVcbiAgZmlsdGVyKGlzX3F1b3RlID09IEZBTFNFKSAlPiUgXG4gIGdyb3VwX2J5KHNvdXJjZSkgJT4lIFxuICBzdW1tYXJpc2UoYXZlcmFnZV9yZXR3ZWV0ID0gbWVhbihyZXR3ZWV0X2NvdW50KSlcbmBgYCJ9 -->
-<pre class="r"><code>rtweets %&gt;%
-  filter(is_quote == FALSE) %&gt;% 
-  group_by(source) %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBzdW1tYXJpc2UgbWVhbiBudW1iZXIgYnkgc291cmNlIFxuXG5ydHdlZXRzICU+JVxuICBmaWx0ZXIoaXNfcXVvdGUgPT0gRkFMU0UpICU+JSAjIG9taXQgcXVvdGVkIHR3ZWV0c1xuICBncm91cF9ieShzb3VyY2UpICU+JSAjIHNwbGl0IGJ5IHRoZSB0eXBlXG4gIHN1bW1hcmlzZShhdmVyYWdlX3JldHdlZXQgPSBtZWFuKHJldHdlZXRfY291bnQpKVxuYGBgIn0= -->
+<pre class="r"><code># summarise mean number by source 
+
+rtweets %&gt;%
+  filter(is_quote == FALSE) %&gt;% # omit quoted tweets
+  group_by(source) %&gt;% # split by the type
   summarise(average_retweet = mean(retweet_count))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiYHN1bW1hcmlzZSgpYCB1bmdyb3VwaW5nIG91dHB1dCAob3ZlcnJpZGUgd2l0aCBgLmdyb3Vwc2AgYXJndW1lbnQpXG4ifQ== -->
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVN3VTdDUUJCZFdvclNSQ0hpQi9RSDZNV0xGMklOeE9qQnhCaU0zTXl5REZBcDNXYTdnRWY5QXIvREg5Q1RmOEdOLy9EZ2dUcmI3aExwSG5abjM4eWJtWmVaKzk3Z3pCMjRoQkNiMkRXOEhUU0o4OUMvYXA4VFVyWHdVeUZWVWxmdkM3cGJhQ0JvSCtGYnk1MzVIOWtZclpnRnZrZXNSYkNFS0VXcm1Yc0w5UGlhYzVrdVFnbmVUY3g4alRiN0t3QTU1TkliYytIZFVxYnhlbzczZ00wMGNOSmZoVktDeU9QQ3V5bVBRWHNheHZNSVErOHlTY29FQlhlakVHSlo2dE5oRVUxTm03dm14NVJKTHREYXFxWVZjdkd6bVg5dTVsK0Jpc01Ubk9yMzhKbDl2MzI4Qi9hNjAxMTNlZ0V4Wjc5TVRPZGd5bGltVE1vWGd1MGswQ1VJT29FbkFWTHBMbVdvQzc3eVRSWTFDZXNWcnl6TGZvdEFPeXVKY0VkVVVuOHNrRklJMlV0M3dCTVo4aGlUV1MwOXd2L2tpaWdCalVXc2lvL2FiTHFJWjJwUGlLdFhnZWlHS25vOWpHMFZKYXVtTWNmSWhuZ1M3aWJuUkhRSWtka1BGSmxyOUJNUjRxeTBFa1JUWDNKSlRaekxlR1NRWWtqYlA1RU9NeExWQWdBQSJ9 -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVN3VTdDUUJCZFdvclNSQ1hpQi9RSGFHSk1qQmRpRGNUb3djUVlqTnpNc2d4UUtkMW11NGhIL1FLL3d4L1FrMy9CamYvdzRJRTYyKzRTNlI1Mlo5L01tNW1YbWJ0dS84VHR1NFFRbTlnMXZCMDBpWFBmdTJ5ZEVWSzE4Rk1oVlZKWDd3dTZtMmdnYU8vaFc4dWQrUi9aR0syWUJiNUZyRVh3REZHS1ZpUDNGdWorRmVjeW5ZY1N2T3VZK1JwdDlCWUFjc0NsTitMQ3U2Rk00L1VjN3dLYmF1Q3d0d2lsQkpISGhiY1RIb1AySEJqUEF3eThpeVFwRXhUY2lVS0laYWxQaDBVME5XMXVtaDlSSnJsQWE2MmFWc2o1ejJyMnVacDlCU29PVDNDazM5MG45djMyOFI3WXkzWm4yZTRHeEp6dE1qR2RnU2xqbVRJcG53dTJrVUNmUWRBeFBBcVFTbmNwUTEzd2hXK3lxRWxZcjNobFdmWmJCTnBaU1lRN3BKTDZJNEdVUXNoV3VoMmV5SkRIbU14cTZoSCtKMWRFQ1dqTVkxVjgyR0tUZVR4dEhaK3FDbm9YaU82b292ZkQyRlpSczJvNmM0eHVpTWZoWm5ST1JBY1FtUVZCbGJsSVB4RWhEa3RMUVRUMUpaZlV4TG1NUndZcHByVCtBNmE4UHp6V0FnQUEifQ== -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["source"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["average_retweet"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Hootsuite Inc.","2":"1.428571"},{"1":"Tweetbot for Mac","2":"4.000000"},{"1":"TweetDeck","2":"5.000000"},{"1":"Twitter for iPhone","2":"3.051948"},{"1":"Twitter Web App","2":"2.478632"},{"1":"Twitter Web Client","2":"2.000000"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
@@ -1846,8 +1858,11 @@ rtweets %&gt;%
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnR3ZWV0cyAlPiUgXG4gIG11dGF0ZShtZWRpYV90eXBlMiA9IHJlcGxhY2VfbmEobWVkaWFfdHlwZSwgXCJ0ZXh0XCIpKSAlPiUgXG4gIGdyb3VwX2J5KG1lZGlhX3R5cGUyKSAlPiUgXG4gIHN1bW1hcmlzZShmYXZvcml0ZV9jb3VudF90b3RhbCA9IHN1bShmYXZvcml0ZV9jb3VudCkpICU+JSBcbiAgYXJyYW5nZShkZXNjKGZhdm9yaXRlX2NvdW50X3RvdGFsKSlcbmBgYCJ9 -->
-<pre class="r"><code>rtweets %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb3VudCB0aGUgbnVtYmVyIG9mIGxpa2VzIGJ5IG1lZGlhIHR5cGUsIGFuZCBhcnJhbmdlIHRoZW0gZnJvbSBtb3N0IGxpa2VzIHRvIGxlYXN0IFxuIyBBc3N1bWUgdGhhdCBhbnkgdHdlZXRzIHdpdGhvdXQgYSBsaXN0ZWQgbWVkaWEgdHlwZSBhcmUgb2YgdHlwZSDigJx0ZXh04oCdXG5cbnJ0d2VldHMgJT4lIFxuICBtdXRhdGUobWVkaWFfdHlwZTIgPSByZXBsYWNlX25hKG1lZGlhX3R5cGUsIFwidGV4dFwiKSkgJT4lIFxuICBncm91cF9ieShtZWRpYV90eXBlMikgJT4lIFxuICBzdW1tYXJpc2UoZmF2b3JpdGVfY291bnRfdG90YWwgPSBzdW0oZmF2b3JpdGVfY291bnQpKSAlPiUgXG4gIGFycmFuZ2UoZGVzYyhmYXZvcml0ZV9jb3VudF90b3RhbCkpXG5gYGAifQ== -->
+<pre class="r"><code># count the number of likes by media type, and arrange them from most likes to least 
+# Assume that any tweets without a listed media type are of type “text”
+
+rtweets %&gt;% 
   mutate(media_type2 = replace_na(media_type, &quot;text&quot;)) %&gt;% 
   group_by(media_type2) %&gt;% 
   summarise(favorite_count_total = sum(favorite_count)) %&gt;% 
@@ -1858,7 +1873,7 @@ rtweets %&gt;%
 ℹ invalid factor level, NA generated
 ℹ Input `media_type2` is `replace_na(media_type, &quot;text&quot;)`.invalid factor level, NA generated`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVJUVS9FSUJDbEg5UnN6YXFKL28zMnNGNzBicng0TTVyc3JVRktYYklzTkpTdWV2T1h0dzRGRWd0SjRmRjRNMjltK3ZxMHZ5LzNKVUlvUTFrQk93YUk4UHZiYy9XQVVKN0NKVUU1MnRqekc1NXZBUUNaYmQySmtsK3JYd3NMd2M1TURJQnUvckc0UHlpaklpbW1nZ3l4c3VnSU5Vb0RtdUR6VG9sVnZjVGhrcHhZQ0U4OWVYbGlMU2VOK2VuWnpsTjNIVGtyelExcnFCcWxhWXd5UkVTNU5scDkxU0hmWW1wYm0rZDVjc0pzanNvc1cySkkzV2tJY2FXdTBsMm8zbkFsSVZscVo0YWo0RVJIeFBVb3JYbGIwY01vajlXak5WaWUzZHA2bks2eHRjeERZVGpNajhsUExsbVlrU0FmVFBqTEZUUzU5RmozbWtzVE9nRjJxTjFRUEVPVkNJejdEZE1maTBtd3F5b0NBQUE9In0= -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MiwibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVJUVS9FSUJDbEg5UnN6WnBOOUcrMGlYclFIMkM4ZURPYTdLMUJTbDBpQ3cybHE5Nzg1YTFEZ1dRTFNlSHhlRE52WnZyNnRMOHY5eVZDS0VOWkFUc0dpUEQ3MjNQMWlGQ2V3aVZCT2RyWTh3ZWVyd0VBbVczZGlaSS9xMThMQzhGT1RBeUFkbWNzN2cvS3FFaUtxU0JEckN3NlFvM1NnQ2I0dkZOaVZTOXh1Q1JIRnNKVFQxNGVXY3RKWTM1N2R1ZXBtNDZjbE9hR05WU04walJHR1NLaVhCdXR2dXVRYnpHMXJjM3pQRGxoTmtkbGxpMHhwTzQwaExoU1Yra3VWRys0a3BBc3RUUERVWENpSTJJM1NtdmVWdlF3eXEvcTlzRTZMTzl1YlQxTzE5aDY1cUV5SEFiSTVDZVhMQXhKa0E4bS9PVUt1bHlhckh2TnBRbXRBRHZVYmlxZW9Vb0V4djJINlIrTEpGZitLd0lBQUE9PSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["media_type2"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["favorite_count_total"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"photo","2":"371"},{"1":"NA","2":"75"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[2]},"pages":{}}}
@@ -1869,36 +1884,38 @@ rtweets %&gt;%
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnR3ZWV0cyAlPiUgXG4gIHN1bW1hcmlzZShhdmdfdHdlZXRfbGVuZ3RoID0gbWVhbihkaXNwbGF5X3RleHRfd2lkdGgpKVxuYGBgIn0= -->
-<pre class="r"><code>rtweets %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBmaW5kIHRoZSBtZWFuIG51bWJlciBvZiBjaGFyYWN0ZXJzIGEgdHdlZXQgY29udGFpbnNcblxucnR3ZWV0cyAlPiUgXG4gIHN1bW1hcmlzZShhdmdfdHdlZXRfbGVuZ3RoID0gbWVhbihkaXNwbGF5X3RleHRfd2lkdGgpKVxuYGBgIn0= -->
+<pre class="r"><code># find the mean number of characters a tweet contains
+
+rtweets %&gt;% 
   summarise(avg_tweet_length = mean(display_text_width))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MX0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVBTd3JDTUJDZGZxSzBvQWllbzBWeDQ5S0ZlQUJSNks3RU50VmlUS1JOMVV0NUhZK2pUa29DbWsxbTVtWGVtL2UyNjJ3Ulp6RUFCQkFNOENYWUF0bnZOc2tTSVBSeDhDQ0VTTmNIZms5N0FHQ3M2K3J3ckY2WDZ1VXNFa0V2ck1WbThnTk82TzJZcXp0akt1ZE1ITlhKSVVXTnZLZVdPREpYUEZlNTRMUjFsZU9TS3BwV0RYSnhlanVVb2J5cVdnb2srZG83Y2NoZTQvcnNoSFpSSnNXcEUrZGtQdE1YakIzNHQrYmE5RDlHaXhpdEFRYXRCYlBtT1Qwd2JvWXh4dTNUcHRlbUZzcEdRYlJObFZUVTdzV0Y1QmJwdzhIN0MxcitFTXl6QVFBQSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["avg_tweet_length"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"149.4188"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29kZWNsYW5faW5mbyA8LSByZWFkX2NzdihcImRhdGEvY29kZV9jbGFuX2luZm8uY3N2XCIpXG5gYGAifQ== -->
-<pre class="r"><code>codeclan_info &lt;- read_csv(&quot;data/code_clan_info.csv&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBhbHRlcm5hdGl2ZSB3YXkgb2YgdGVzdGluZyB0aGUgc3RyX2xlbmd0aCBmdW5jdGlvblxuXG5jb2RlX2NsYW5fdHdlZXRzX3RleHQgPC0gcnR3ZWV0cyAlPiVcbiAgbXV0YXRlKGNvdW50X3N0cl9sZW5ndGggPSBzdHJfbGVuZ3RoKHRleHQpKSAlPiVcbiAgc2VsZWN0KGNvdW50X3N0cl9sZW5ndGgsIGRpc3BsYXlfdGV4dF93aWR0aClcbmBgYCJ9 -->
+<pre class="r"><code># alternative way of testing the str_length function
+
+code_clan_tweets_text &lt;- rtweets %&gt;%
+  mutate(count_str_length = str_length(text)) %&gt;%
+  select(count_str_length, display_text_width)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29kZWNsYW5fYWxsIDwtIGxlZnRfam9pbihydHdlZXRzLCBjb2RlY2xhbl9pbmZvLCBieSA9IFwidHdlZXRfaWRcIilcbmNvZGVjbGFuX2FsbFxuYGBgIn0= -->
-<pre class="r"><code>codeclan_all &lt;- left_join(rtweets, codeclan_info, by = &quot;tweet_id&quot;)
-codeclan_all</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29kZWNsYW5fYWxsIDwtIGxlZnRfam9pbihydHdlZXRzLCBjb2RlY2xhbl9pbmZvLCBieSA9IFwidHdlZXRfaWRcIilcbmBgYCJ9 -->
+<pre class="r"><code>codeclan_all &lt;- left_join(rtweets, codeclan_info, by = &quot;tweet_id&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29kZWNsYW5faGFzaHRhZ3MgPC0gY29kZWNsYW5fYWxsJT4lIFxuICBzZWxlY3QodHdlZXRfaWQsIGhhc2h0YWdzKSAlPiVcbiAgbXV0YXRlKGxvd2Nhc2VfaGFzaHRhZyA9IHN0cl90b19sb3dlcihoYXNodGFncykpICU+JVxuICBzZWxlY3QoLWhhc2h0YWdzKSAlPiVcbiAgZHJvcF9uYShsb3djYXNlX2hhc2h0YWcpXG5cbmhlYWQoY29kZWNsYW5faGFzaHRhZ3MpXG5gYGAifQ== -->
-<pre class="r"><code>codeclan_hashtags &lt;- codeclan_all%&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgYSB2YXJpYWJsZSB3aGljaCBoYXMgYWxsIHRoZSBoYXNodGFncyBpbiBsb3dlcmNhc2UgZm9yIGFuYWx5c2lzXG5cbmNvZGVjbGFuX2hhc2h0YWdzIDwtIGNvZGVjbGFuX2FsbCU+JSBcbiAgc2VsZWN0KHR3ZWV0X2lkLCBoYXNodGFncykgJT4lXG4gIG11dGF0ZShsb3djYXNlX2hhc2h0YWcgPSBzdHJfdG9fbG93ZXIoaGFzaHRhZ3MpKSAlPiVcbiAgc2VsZWN0KC1oYXNodGFncykgJT4lXG4gIGRyb3BfbmEobG93Y2FzZV9oYXNodGFnKVxuXG5oZWFkKGNvZGVjbGFuX2hhc2h0YWdzKVxuYGBgIn0= -->
+<pre class="r"><code># create a variable which has all the hashtags in lowercase for analysis
+
+codeclan_hashtags &lt;- codeclan_all%&gt;% 
   select(tweet_id, hashtags) %&gt;%
   mutate(lowcase_hashtag = str_to_lower(hashtags)) %&gt;%
   select(-hashtags) %&gt;%
@@ -1906,30 +1923,23 @@ codeclan_all</code></pre>
 
 head(codeclan_hashtags)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUE1VlF3VTdETUF6MXNxYXdTdHVRK0k3MmdvUTQ5b0E0SXdUU2JpTzBZYTFJazZsSlZJNThBbDg4Y0ZvSFFXOVVTcCtmWS92bCtlRjJkNVh0TWdCWXdqTEZQOGNRK05QalhYNERrREFrQzBoZ0ZmQWRyeTh4Q01rTm5yVDBuNkVhU3Y5QitFeDRUMWdTUXZ3dVFoOE5UR3V2YXltSkpVNVdEY1huSWU1OFovL04vejZaYTlGSlM3THNwM2lRMHUzYm12aFdtYUVTVnU0YllSc25Eck1acTk0TVJaeXpEbk1tczJoakpsWXBZYU5ZVEdhMWNLSjQ3YkVmMlduV2NtYU9yalVhbTFoWUxKODFML3BaWXV0MWVFbWRWNDNYYi9sMUVCaXZwN01tVEgvRmJKSmtYelNLeCtWTGZXaDFYRDVYNGtVcUlodDBQQm91am4yclhYU0NXVnM0NDBTc3l5cWpZbWIwQnFkdms2djlLazhDQUFBPSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["tweet_id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["lowcase_hashtag"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"345","2":"dundee","_rn_":"1"},{"1":"344","2":"tech","_rn_":"2"},{"1":"342","2":"techmums","_rn_":"3"},{"1":"341","2":"techmums","_rn_":"4"},{"1":"340","2":"techmums","_rn_":"5"},{"1":"336","2":"techmums","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB1c2UgdGhlIHN0cl9zdWIgZnVuY3Rpb24gdG8gZ2V0IHRoZSBmaXJzdCAyIGxldHRlcnMgb2YgZWFjaCB0d2VldFxuXG5oYXNodGFnc19tdWx0aXBsZSA8LSBjb2RlY2xhbl9oYXNodGFncyAlPiUgXG4gIG11dGF0ZShmaXJzdF9sZXR0ZXJzID0gc3RyX3N1Yihsb3djYXNlX2hhc2h0YWcsIDEsIDIpKSAlPiVcbiAgZmlsdGVyKHN0cl9kZXRlY3QoZmlyc3RfbGV0dGVycywgXCJjXFxcXChcIikpXG5cbmhlYWQoaGFzaHRhZ3NfbXVsdGlwbGUpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB1c2UgdGhlIHN0cl9zdWIgZnVuY3Rpb24gdG8gZ2V0IHRoZSBmaXJzdCAyIGxldHRlcnMgb2YgZWFjaCB0d2VldFxuXG5oYXNodGFnc19tdWx0aXBsZSA8LSBjb2RlY2xhbl9oYXNodGFncyAlPiUgXG4gIG11dGF0ZShmaXJzdF9sZXR0ZXJzID0gc3RyX3N1Yihsb3djYXNlX2hhc2h0YWcsIDEsIDIpKSAlPiVcbiAgZmlsdGVyKHN0cl9kZXRlY3QoZmlyc3RfbGV0dGVycywgXCJjXFxcXChcIikpXG5cbmhhc2h0YWdzX211bHRpcGxlXG5gYGAifQ== -->
 <pre class="r"><code># use the str_sub function to get the first 2 letters of each tweet
 
 hashtags_multiple &lt;- codeclan_hashtags %&gt;% 
   mutate(first_letters = str_sub(lowcase_hashtag, 1, 2)) %&gt;%
   filter(str_detect(first_letters, &quot;c\\(&quot;))
 
-head(hashtags_multiple)</code></pre>
+hashtags_multiple</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6M30sInJkZiI6Ikg0c0lBQUFBQUFBQUE1MVN3VzdVTUJCMWQ1dlFSdG9XcVNkT1ZIc3FpSzVZOVFLM1BhQ2VFUUtwdDlYVW1VMWNzbmJrbVd6Z3hxZndhWHhKWVp3NDJ6YnFpVWpPekx6MzVzVVQrOHVubTZ2c0psTktUZFUwbFhjaXFVcStmYjIrL0tEVTRVU0tBM1dvamtQOElmUlpwMVRxUkZhNm9qcW8xWW8reDdpSzhXVWYvWjhZZjZ2NEJDS05odWY2WW40SE95RHRUYzN6ZCtmem9nSXFYQnZTTzVxL2licHIwY0Z5K1RQQW9EVVNtVnRUR2U0QWNodHV3V1BJeXdaYU5QWFYrOXE3amlzZE85dWplN2N6Y1dQVVpSRGtqYzBSOTlScm9UeHVtZ0tSQW0yMk5XaW1acnMxdlB5NGw3MFYyWWdTOFE2cUpyYlpIUkk3L3pEQksrblkrV2N0bi82U2liNzRqK3pwT1NVV3RralJlQnJCSTI0UmVXM3lXSjlXcnRWQXVDNkJTb1lpd3JPTjhjVHJDcG5SMDhqNDJMdDJNWmpQd3JkLzlZZWFqbmVnNVJ5SEhReGdsZ1BEWXVPbFg2cjdVY3NMVjdOeFZwb200WW9sbytZRFB3Sk9HeHQya2wvcXNySGZ3MTFWV1VmM2F4WmoraWlmOXArYy9JMVdTYlJLMFJiRzRyRDNDbTZ4aXNXSlROd052S2k5c1R4TUlpZ3QyREVNdWt5N2FrQzYyZFQ5UDJWMnBVOVpBd0FBIn0= -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NDksIm5jb2wiOjN9LCJyZGYiOiJINHNJQUFBQUFBQUFBKzFYelk0VFJ4QWVkakUvS3kxWkJkaVFFQkxMU0JFZzFxeFpDY0VwZTRnNG95aVJPTVhiMDFPZWFXOVA5OURkWSs5eTRoSHlDRHdDajVCSHlDUGtTUWpWTTlXZW4zWENjdUFTeFpKZDNWVmZWWDNkVTFXMmYvN3A1Y0hXeTYwb2lqYWp6VXY0T2NCbE5QajFsK2Q3VDZQbzRnWnVMa1FYbzZ0ZW5xRDVlb1dNb212NG5oemF3cU9qUS91QzVDSEpuVnFhdjBpK0pVbDRReml6VDNKSU1xcmxxejlKdmlQNWV5MkxQMGlTWHBPZklyMmlmVTc1amluZW5QYnpOeVNQU0pKZGtGNlFYaEMvak93cDdWUGF6d2dQRkJmSW5oQ1BoSENjOWpIRmpRa1hrNTJSblZFOFJ2eVBLTzRSK1IyUmZrcjRLZm4vRm9YWERyNG45S0NHL041b3poYk1jaU1LTjNvNEhLV1MyVlF2L1hKdVIvY0o5eHh4YkRJNTlXckdPVmdyWWlHRnF4Uld6OXlTR2ZEcnJHUkxFTVhCZm1GMFpjdTAwNnJXcnFKZHgyZ09lT1lCU2FrU2dKWHBlelFabUpVcGdQVm1rUmVNTzF2bXVYQ1RaeXZZQTRUMVRBaGVNRm1TbTFxQWRkbzBKL2dhUFJibVgwSStRc0FTcEZSNHVEVXcxSENkQUpkTVNURnJDSS9XTWhFNVMwWE1uTkJxaFJ5dVJYS21FajFEc3A4Tjk4TmFuQU9XeDZsZnhWeWI0ck5sZjRvNFNJU0tTNU5tWjI2eElzS3pzUFkyQmN0WU5QZDdDLzFSTFZRYW5xdXBubEM3WUJxdHJ6aXVIWVpQS2lxZE1IMGFQbWF3LzRoMldmTGowM1J5MEd1RFBtRXl0Zm12d3R5c2lpaXVDeTNFQ01ZeEdsUERrckt1aTQrRURsN2Y5UThZblB4QlY2aHZFVFVycGJTTzhlT3FlWnV1YmwvVjNQYU1aNjlpdDM5Vkh0MEprakRNd2t3QnlwbHFBamlSbkNKRDI3QytqYkR1azBBWUNHZzEzRmMrVDZYeHBsWENkc09tVXNkTStqajJyUDlqWHhsU0lJbVRBZ3hLWHRmUVNRUDExREpoRWdzY2g4RjVNKy9TZU1yTGZFM2FMOXZPMWtHK3N0enhoRW9jT3psVXp6OUhha3htd0tScmd0LzE3cmJRcG4wa1A3dEVBanBsT1RTbHZkUE9oTWRxRDcrR0FWMnlzS3BicnJGNC9VblY4ZURjalJvOHZrRVBIUE5ZMGpnQTZ2N3NsZElOS3BaMTNYRE9Ram9uekhkSnArbldvbTYyK0lTTDYxeFM1d0lTV0lEVVdGdTJVM085STJPN0U5QS83OG9QTXpERjVLa1ZqZWV3bm1NZmJmZC9tQ0RkciswTmZ1Ly8xWDk4MWYxRlBWQitORkFaYkpMeWlsc0N1S2xJYVArRjFFdk9MRXd6WmpQSFVsSnZ6NFN4YmlyQk9hemxYdUNyUmkvSElmaTJ6LzJtL3BrNDZUUEF5cldCUVZCdStWb2Z6N0FkQUhmdmV5NlhkZUcvNmRCcHcvOFpHUFNjTDVpZVlxZFVua215eDdOU0hlODlmdUl6VlBiNnRVM3JTV3U5V2VmYytKdGlEU2pXSlZDcFVCRElTeGFEcE0wMVBISjE0bkZoaEhMaEtLaTFZNmR4WkFjTjF6Sm9xc05GN3o4QVpQekxtZ1FOQUFBPSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["tweet_id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["lowcase_hashtag"],"name":[2],"type":["chr"],"align":["left"]},{"label":["first_letters"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"311","2":"c(\"javascript\", \"glasgow\", \"js\")","3":"c(","_rn_":"1"},{"1":"309","2":"c(\"a11y\", \"accessibility\", \"software\", \"huaweip30pro\", \"shotonhuawei\")","3":"c(","_rn_":"2"},{"1":"308","2":"c(\"tech\", \"dundee\")","3":"c(","_rn_":"3"},{"1":"305","2":"c(\"refugees\", \"impactsummit19\")","3":"c(","_rn_":"4"},{"1":"302","2":"c(\"impactsummit19\", \"values\", \"investors\")","3":"c(","_rn_":"5"},{"1":"298","2":"c(\"vr\", \"impactsummit19\")","3":"c(","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+{"columns":[{"label":["tweet_id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["lowcase_hashtag"],"name":[2],"type":["chr"],"align":["left"]},{"label":["first_letters"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"311","2":"c(\"javascript\", \"glasgow\", \"js\")","3":"c("},{"1":"309","2":"c(\"a11y\", \"accessibility\", \"software\", \"huaweip30pro\", \"shotonhuawei\")","3":"c("},{"1":"308","2":"c(\"tech\", \"dundee\")","3":"c("},{"1":"305","2":"c(\"refugees\", \"impactsummit19\")","3":"c("},{"1":"302","2":"c(\"impactsummit19\", \"values\", \"investors\")","3":"c("},{"1":"298","2":"c(\"vr\", \"impactsummit19\")","3":"c("},{"1":"295","2":"c(\"wellness\", \"impactsummit19\", \"codeclanlife\")","3":"c("},{"1":"292","2":"c(\"impactsummit19\", \"imagibation\")","3":"c("},{"1":"291","2":"c(\"impactsummit19\", \"candofest\")","3":"c("},{"1":"290","2":"c(\"impactsummit19\", \"candofest\")","3":"c("},{"1":"288","2":"c(\"impactsummit19\", \"candofest\")","3":"c("},{"1":"285","2":"c(\"impactsummit19\", \"teambg\", \"bcorp\")","3":"c("},{"1":"283","2":"c(\"impactsummit19\", \"candofest\")","3":"c("},{"1":"281","2":"c(\"impactsummit19\", \"candofest\")","3":"c("},{"1":"268","2":"c(\"edinburgh\", \"codeclanlife\", \"techlife\", \"codenewbie\")","3":"c("},{"1":"267","2":"c(\"coding\", \"inverness\")","3":"c("},{"1":"249","2":"c(\"inverness\", \"scotlandcando\")","3":"c("},{"1":"246","2":"c(\"edinburgh\", \"coding\")","3":"c("},{"1":"241","2":"c(\"luckyg13\", \"glasgow\", \"codeclanlife\", \"glasgowlife\", \"tech\")","3":"c("},{"1":"237","2":"c(\"webvr\", \"glasgow\")","3":"c("},{"1":"216","2":"c(\"graduation\", \"codeclanlife\", \"glasgowlife\")","3":"c("},{"1":"213","2":"c(\"inverness\", \"codeclanscot\")","3":"c("},{"1":"212","2":"c(\"fullstack\", \"javascript\")","3":"c("},{"1":"211","2":"c(\"js\", \"javascript\", \"coding\")","3":"c("},{"1":"208","2":"c(\"edinburgh\", \"java\")","3":"c("},{"1":"204","2":"c(\"datacarpentry\", \"tidyverse\")","3":"c("},{"1":"203","2":"c(\"scotlandcando\", \"eie19\")","3":"c("},{"1":"202","2":"c(\"eie19\", \"edinburgh\")","3":"c("},{"1":"192","2":"c(\"globalscots\", \"eie19\")","3":"c("},{"1":"186","2":"c(\"clientxperience\", \"cx\", \"eie19\", \"thirdsector\")","3":"c("},{"1":"184","2":"c(\"eie19\", \"edinburgh\")","3":"c("},{"1":"180","2":"c(\"techmums\", \"eie19\")","3":"c("},{"1":"173","2":"c(\"eie19\", \"stem\")","3":"c("},{"1":"170","2":"c(\"customer\", \"mentalhealth\")","3":"c("},{"1":"166","2":"c(\"esports\", \"eie19\", \"videogames\")","3":"c("},{"1":"160","2":"c(\"eie19\", \"cx\")","3":"c("},{"1":"158","2":"c(\"eie19\", \"scotlandisnow\", \"codeclanbiz\")","3":"c("},{"1":"147","2":"c(\"fullstack\", \"javascript\")","3":"c("},{"1":"146","2":"c(\"edinburgh\", \"codeclanlife\", \"techlife\")","3":"c("},{"1":"144","2":"c(\"programming\", \"coding\")","3":"c("},{"1":"142","2":"c(\"data\", \"glasgow\")","3":"c("},{"1":"140","2":"c(\"datacarpentry\", \"tidyverse\")","3":"c("},{"1":"137","2":"c(\"datacarpentry\", \"tidyverse\")","3":"c("},{"1":"133","2":"c(\"r\", \"glasgow\", \"tidyverse\")","3":"c("},{"1":"131","2":"c(\"data\", \"scotland\")","3":"c("},{"1":"129","2":"c(\"edinburgh\", \"developers\")","3":"c("},{"1":"127","2":"c(\"programming\", \"webdevelopment\", \"dataanalysis\")","3":"c("},{"1":"124","2":"c(\"codeclanlife\", \"glasgowlife\")","3":"c("},{"1":"120","2":"c(\"webvr\", \"glasgow\")","3":"c("}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[49]},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -1937,17 +1947,62 @@ head(hashtags_multiple)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXNlcl9wYXR0ZXJuIDwtIFwiQFthLXpBLVowLTlfXStcIlxudHdlZXRzIDwtIHJ0d2VldHMgJT4lIFxuICBzZWxlY3QodGV4dClcbmhlYWQoc3RyX2V4dHJhY3RfYWxsKHR3ZWV0cyR0ZXh0LCB1c2VyX3BhdHRlcm4pKVxuYGBgIn0= -->
-<pre class="r"><code>user_pattern &lt;- &quot;@[a-zA-Z0-9_]+&quot;
-tweets &lt;- rtweets %&gt;% 
-  select(text)
-head(str_extract_all(tweets$text, user_pattern))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBmaW5kIGFsbCBjYXNlcyB3aGVyZSBhIHR3ZWV0IHRleHQgbWVudGlvbnMgZWRpbmJ1cmdoLCBhbmQgY291bnQgaW4gaG93IG1hbnkgdHdlZXRzIGl0IGFwcGVhcnNcblxucnR3ZWV0cyAlPiUgXG4gIHNlbGVjdCh0ZXh0KSAlPiUgXG4gIG11dGF0ZShsb3dlcl9jYXNlX3RleHQgPSBzdHJfdG9fbG93ZXIodGV4dCkpICU+JSBcbiAgZmlsdGVyKHN0cl9kZXRlY3QobG93ZXJfY2FzZV90ZXh0LCBcImVkaW5idXJnaFwiKSkgJT4lIFxuICBzdW1tYXJpc2UoZWRpX21lbnRpb25lZCA9IG4oKSlcbmBgYCJ9 -->
+<pre class="r"><code># find all cases where a tweet text mentions edinburgh, and count in how many tweets it appears
+
+rtweets %&gt;% 
+  select(text) %&gt;% 
+  mutate(lower_case_text = str_to_lower(text)) %&gt;% 
+  filter(str_detect(lower_case_text, &quot;edinburgh&quot;)) %&gt;% 
+  summarise(edi_mentioned = n())</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MX0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVB5dzZDTUJCY0h0VkFnaUh4Qy93QU9PaEY3OFlQTUpwd001VldKVUpMb0VTL0h0MlNOdEZldXJ2VG5kbVo0NzdZeEVVTUFBRUVNM3dKdGtET3AwTzJCUWg5SER3SUlkTDFqZC9MQ1FCSVRGMDVTMFRRaHZmWXBEOWd3bGwxYWJoUWxSU2NPWXlvazYvY3NxeXM1OHFXTmUxZDJaaFJSZk5iaDF5Y1JvY3lsNjIraHlSZm15WU8yZXNjSUIyRWRzR3k4akdJWjdiZTZRdkdEdnhiYzIzNkg2TkZqTmFNaTNzbHVEVmYweXV2emJEQXVGUGF2TzBxb1d3VVJQdGNTVVh0WGx6SzJpSlRPQmkvdmFHdlY2d0JBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["edi_mentioned"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"33"}],"options":{"columns":{"min":{},"max":[10],"total":[1]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
+<pre class="r"><code>NA</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB1c2Ugc3RyX2V4dHJhY3RfYWxsIGFuZCByZWdleCB0byBmaW5kIHVzZXJuYW1lcyB0d2VldGVkIGJ5IENvZGVDbGFuXG5cbnVzZXJfcGF0dGVybiA8LSBcIkBbYS16QS1aMC05X10rXCJcbnR3ZWV0cyA8LSBydHdlZXRzICU+JSBcbiAgc2VsZWN0KHRleHQpXG5oZWFkKHN0cl9leHRyYWN0X2FsbCh0d2VldHMkdGV4dCwgdXNlcl9wYXR0ZXJuKSlcbmBgYCJ9 -->
+<pre class="r"><code># use str_extract_all and regex to find usernames tweeted by CodeClan
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGl2eXZlcnNlIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKYGBge3J9CnJ0d2VldHMgPC0gcmVhZC5jc3YoImRhdGEvY29kZV9jbGFuX3R3ZWV0cy5jc3YiKQpuYW1lcyhydHdlZXRzKQpucm93KHJ0d2VldHMpCm5jb2wocnR3ZWV0cykKYGBgCgpgYGB7cn0KIyBjb3VudCB0b3RhbCBudW1iZXIgaWYgZmF2b3VyaXRlcywgZG9uJ3QgaW5jbHVkZSB0d2VldHMgdGhhdCBhcmUgcXVvdGVkCnJ0d2VldHMgJT4lIAogIGZpbHRlcihpc19xdW90ZSA9PSBGQUxTRSkgJT4lIAogIHN1bW1hcmlzZSh0b3RhbCA9IHN1bShmYXZvcml0ZV9jb3VudCkpCmBgYAoKYGBge3J9CiMgc3VtbWFyaXNlIG1lYW4gbnVtYmVyIGJ5IHNvdXJjZSAKCnJ0d2VldHMgJT4lCiAgZmlsdGVyKGlzX3F1b3RlID09IEZBTFNFKSAlPiUgIyBvbWl0IHF1b3RlZCB0d2VldHMKICBncm91cF9ieShzb3VyY2UpICU+JSAjIHNwbGl0IGJ5IHRoZSB0eXBlCiAgc3VtbWFyaXNlKGF2ZXJhZ2VfcmV0d2VldCA9IG1lYW4ocmV0d2VldF9jb3VudCkpCmBgYAoKYGBge3J9CnJ0d2VldHMgJT4lIAogIG11dGF0ZShtZWRpYV90eXBlMiA9IHJlcGxhY2VfbmEobWVkaWFfdHlwZSwgInRleHQiKSkgJT4lIAogIGdyb3VwX2J5KG1lZGlhX3R5cGUyKSAlPiUgCiAgc3VtbWFyaXNlKGZhdm9yaXRlX2NvdW50X3RvdGFsID0gc3VtKGZhdm9yaXRlX2NvdW50KSkgJT4lIAogIGFycmFuZ2UoZGVzYyhmYXZvcml0ZV9jb3VudF90b3RhbCkpCmBgYAoKYGBge3J9CnJ0d2VldHMgJT4lIAogIHN1bW1hcmlzZShhdmdfdHdlZXRfbGVuZ3RoID0gbWVhbihkaXNwbGF5X3RleHRfd2lkdGgpKQpgYGAKYGBge3J9CmNvZGVjbGFuX2luZm8gPC0gcmVhZF9jc3YoImRhdGEvY29kZV9jbGFuX2luZm8uY3N2IikKYGBgCgoKYGBge3J9CmNvZGVjbGFuX2FsbCA8LSBsZWZ0X2pvaW4ocnR3ZWV0cywgY29kZWNsYW5faW5mbywgYnkgPSAidHdlZXRfaWQiKQpjb2RlY2xhbl9hbGwKYGBgCgpgYGB7cn0KY29kZWNsYW5faGFzaHRhZ3MgPC0gY29kZWNsYW5fYWxsJT4lIAogIHNlbGVjdCh0d2VldF9pZCwgaGFzaHRhZ3MpICU+JQogIG11dGF0ZShsb3djYXNlX2hhc2h0YWcgPSBzdHJfdG9fbG93ZXIoaGFzaHRhZ3MpKSAlPiUKICBzZWxlY3QoLWhhc2h0YWdzKSAlPiUKICBkcm9wX25hKGxvd2Nhc2VfaGFzaHRhZykKCmhlYWQoY29kZWNsYW5faGFzaHRhZ3MpCmBgYAoKYGBge3J9CiMgdXNlIHRoZSBzdHJfc3ViIGZ1bmN0aW9uIHRvIGdldCB0aGUgZmlyc3QgMiBsZXR0ZXJzIG9mIGVhY2ggdHdlZXQKCmhhc2h0YWdzX211bHRpcGxlIDwtIGNvZGVjbGFuX2hhc2h0YWdzICU+JSAKICBtdXRhdGUoZmlyc3RfbGV0dGVycyA9IHN0cl9zdWIobG93Y2FzZV9oYXNodGFnLCAxLCAyKSkgJT4lCiAgZmlsdGVyKHN0cl9kZXRlY3QoZmlyc3RfbGV0dGVycywgImNcXCgiKSkKCmhlYWQoaGFzaHRhZ3NfbXVsdGlwbGUpCmBgYAoKYGBge3J9CnVzZXJfcGF0dGVybiA8LSAiQFthLXpBLVowLTlfXSsiCnR3ZWV0cyA8LSBydHdlZXRzICU+JSAKICBzZWxlY3QodGV4dCkKaGVhZChzdHJfZXh0cmFjdF9hbGwodHdlZXRzJHRleHQsIHVzZXJfcGF0dGVybikpCmBgYAoKCg==</div>
+user_pattern &lt;- &quot;@[a-zA-Z0-9_]+&quot;
+tweets &lt;- rtweets %&gt;% 
+  select(text)
+head(str_extract_all(tweets$text, user_pattern))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiW1sxXV1cblsxXSBcIkBDb2RlQ2xhblNjb3RcIiBcIkBZb3VUdWJlXCIgICAgIFxuXG5bWzJdXVxuY2hhcmFjdGVyKDApXG5cbltbM11dXG5bMV0gXCJAZXBsYWNlbWVudHNjb3RcIiBcIkBHQV9EdW5kZWVcIiAgICAgIFwiQENvZGVDbGFuU2NvdFwiICAgXCJAT1VTY290bGFuZFwiICAgIFxuXG5bWzRdXVxuWzFdIFwiQEluZ2xlZGV3U3RlcGhlblwiIFwiQENfTGVhdmVyXCIgICAgICAgIFwiQE1hTUNoYW5uZWxcIiAgICAgIFwiQEdlcnJ5TWNDdXNrZXJcIiAgXG5bNV0gXCJARG9uYWxkTWNMXCIgICAgICAgXCJAcG9sbHlwXCIgICAgICAgICBcblxuW1s1XV1cbmNoYXJhY3RlcigwKVxuXG5bWzZdXVxuWzFdIFwiQFRlY2htdW1zSFFcIiAgIFwiQENvZGVDbGFuU2NvdFwiXG4ifQ== -->
+<pre><code>[[1]]
+[1] &quot;@CodeClanScot&quot; &quot;@YouTube&quot;     
+
+[[2]]
+character(0)
+
+[[3]]
+[1] &quot;@eplacementscot&quot; &quot;@GA_Dundee&quot;      &quot;@CodeClanScot&quot;   &quot;@OUScotland&quot;    
+
+[[4]]
+[1] &quot;@IngledewStephen&quot; &quot;@C_Leaver&quot;        &quot;@MaMChannel&quot;      &quot;@GerryMcCusker&quot;  
+[5] &quot;@DonaldMcL&quot;       &quot;@pollyp&quot;         
+
+[[5]]
+character(0)
+
+[[6]]
+[1] &quot;@TechmumsHQ&quot;   &quot;@CodeClanScot&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGl2eXZlcnNlIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKYGBge3J9CnJ0d2VldHMgPC0gcmVhZC5jc3YoImRhdGEvY29kZV9jbGFuX3R3ZWV0cy5jc3YiKQpjb2RlY2xhbl9pbmZvIDwtIHJlYWRfY3N2KCJkYXRhL2NvZGVfY2xhbl9pbmZvLmNzdiIpCgpuYW1lcyhydHdlZXRzKQpucm93KHJ0d2VldHMpCm5jb2wocnR3ZWV0cykKYGBgCgpgYGB7cn0KIyBjb3VudCB0b3RhbCBudW1iZXIgb2YgZmF2b3VyaXRlIHR3ZWV0cywgZG9uJ3QgaW5jbHVkZSB0d2VldHMgdGhhdCBhcmUgcXVvdGVkCgpydHdlZXRzICU+JSAKICBmaWx0ZXIoaXNfcXVvdGUgPT0gRkFMU0UpICU+JSAKICBzdW1tYXJpc2UodG90YWwgPSBzdW0oZmF2b3JpdGVfY291bnQpKQpgYGAKCmBgYHtyfQojIHN1bW1hcmlzZSB0aGUgbWVhbiBudW1iZXIgb2YgcmV0d2VldHMgYnkgc291cmNlCgpydHdlZXRzICU+JQogIGZpbHRlcihpc19xdW90ZSA9PSBGQUxTRSkgJT4lICMgb21pdCBxdW90ZWQgdHdlZXRzCiAgZ3JvdXBfYnkoc291cmNlKSAlPiUgIyBzcGxpdCBieSB0aGUgdHlwZQogIHN1bW1hcmlzZShhdmVyYWdlX3JldHdlZXQgPSBtZWFuKHJldHdlZXRfY291bnQpKQpgYGAKCmBgYHtyfQojIGNvdW50IHRoZSBudW1iZXIgb2YgbGlrZXMgYnkgbWVkaWEgdHlwZSwgYW5kIGFycmFuZ2UgdGhlbSBmcm9tIG1vc3QgbGlrZXMgdG8gbGVhc3QgCiMgQXNzdW1lIHRoYXQgYW55IHR3ZWV0cyB3aXRob3V0IGEgbGlzdGVkIG1lZGlhIHR5cGUgYXJlIG9mIHR5cGUg4oCcdGV4dOKAnQoKcnR3ZWV0cyAlPiUgCiAgbXV0YXRlKG1lZGlhX3R5cGUyID0gcmVwbGFjZV9uYShtZWRpYV90eXBlLCAidGV4dCIpKSAlPiUgCiAgZ3JvdXBfYnkobWVkaWFfdHlwZTIpICU+JSAKICBzdW1tYXJpc2UoZmF2b3JpdGVfY291bnRfdG90YWwgPSBzdW0oZmF2b3JpdGVfY291bnQpKSAlPiUgCiAgYXJyYW5nZShkZXNjKGZhdm9yaXRlX2NvdW50X3RvdGFsKSkKYGBgCgpgYGB7cn0KIyBmaW5kIHRoZSBtZWFuIG51bWJlciBvZiBjaGFyYWN0ZXJzIGEgdHdlZXQgY29udGFpbnMKCnJ0d2VldHMgJT4lIAogIHN1bW1hcmlzZShhdmdfdHdlZXRfbGVuZ3RoID0gbWVhbihkaXNwbGF5X3RleHRfd2lkdGgpKQpgYGAKCmBgYHtyfQojIGFsdGVybmF0aXZlIHdheSBvZiB0ZXN0aW5nIHRoZSBzdHJfbGVuZ3RoIGZ1bmN0aW9uCgpjb2RlX2NsYW5fdHdlZXRzX3RleHQgPC0gcnR3ZWV0cyAlPiUKICBtdXRhdGUoY291bnRfc3RyX2xlbmd0aCA9IHN0cl9sZW5ndGgodGV4dCkpICU+JQogIHNlbGVjdChjb3VudF9zdHJfbGVuZ3RoLCBkaXNwbGF5X3RleHRfd2lkdGgpCmBgYAoKCmBgYHtyfQojIGpvaW4gaXQgdG8gdGhlIGNvZGVfY2xhbl90d2VldHMgdGliYmxlLCBzbyB0aGF0IHlvdSBoYXZlIGEgc3RhdHVzX3VybCBmb3IgZWFjaCB0d2VldAoKY29kZWNsYW5fYWxsIDwtIGxlZnRfam9pbihydHdlZXRzLCBjb2RlY2xhbl9pbmZvLCBieSA9ICJ0d2VldF9pZCIpCmBgYAoKYGBge3J9CiMgY3JlYXRlIGEgdmFyaWFibGUgd2hpY2ggaGFzIGFsbCB0aGUgaGFzaHRhZ3MgaW4gbG93ZXJjYXNlIGZvciBhbmFseXNpcwoKY29kZWNsYW5faGFzaHRhZ3MgPC0gY29kZWNsYW5fYWxsJT4lIAogIHNlbGVjdCh0d2VldF9pZCwgaGFzaHRhZ3MpICU+JQogIG11dGF0ZShsb3djYXNlX2hhc2h0YWcgPSBzdHJfdG9fbG93ZXIoaGFzaHRhZ3MpKSAlPiUKICBzZWxlY3QoLWhhc2h0YWdzKSAlPiUKICBkcm9wX25hKGxvd2Nhc2VfaGFzaHRhZykKCmhlYWQoY29kZWNsYW5faGFzaHRhZ3MpCmBgYAoKYGBge3J9CiMgdXNlIHRoZSBzdHJfc3ViIGZ1bmN0aW9uIHRvIGdldCB0d2VldHMgd2l0aCBtb3JlIHRoYW4gb25lIGhhc2h0YWcgKGdldCB0aGUgZmlyc3QgMiBsZXR0ZXJzIG9mIGVhY2ggdHdlZXQpCgpoYXNodGFnc19tdWx0aXBsZSA8LSBjb2RlY2xhbl9oYXNodGFncyAlPiUgCiAgbXV0YXRlKGZpcnN0X2xldHRlcnMgPSBzdHJfc3ViKGxvd2Nhc2VfaGFzaHRhZywgMSwgMikpICU+JQogIGZpbHRlcihzdHJfZGV0ZWN0KGZpcnN0X2xldHRlcnMsICJjXFwoIikpCgpoYXNodGFnc19tdWx0aXBsZQpgYGAKCmBgYHtyfQojIGZpbmQgYWxsIGNhc2VzIHdoZXJlIGEgdHdlZXQgdGV4dCBtZW50aW9ucyBlZGluYnVyZ2gsIGFuZCBjb3VudCBpbiBob3cgbWFueSB0d2VldHMgaXQgYXBwZWFycwoKcnR3ZWV0cyAlPiUgCiAgc2VsZWN0KHRleHQpICU+JSAKICBtdXRhdGUobG93ZXJfY2FzZV90ZXh0ID0gc3RyX3RvX2xvd2VyKHRleHQpKSAlPiUgCiAgZmlsdGVyKHN0cl9kZXRlY3QobG93ZXJfY2FzZV90ZXh0LCAiZWRpbmJ1cmdoIikpICU+JSAKICBzdW1tYXJpc2UoZWRpX21lbnRpb25lZCA9IG4oKSkKICAKYGBgCgpgYGB7cn0KIyB1c2Ugc3RyX2V4dHJhY3RfYWxsIGFuZCByZWdleCB0byBmaW5kIHVzZXJuYW1lcyB0d2VldGVkIGJ5IENvZGVDbGFuCgp1c2VyX3BhdHRlcm4gPC0gIkBbYS16QS1aMC05X10rIgp0d2VldHMgPC0gcnR3ZWV0cyAlPiUgCiAgc2VsZWN0KHRleHQpCmhlYWQoc3RyX2V4dHJhY3RfYWxsKHR3ZWV0cyR0ZXh0LCB1c2VyX3BhdHRlcm4pKQpgYGAKCgo=</div>
 
 
 

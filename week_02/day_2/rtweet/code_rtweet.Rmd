@@ -9,20 +9,23 @@ library(tidyverse)
 
 ```{r}
 rtweets <- read.csv("data/code_clan_tweets.csv")
+codeclan_info <- read_csv("data/code_clan_info.csv")
+
 names(rtweets)
 nrow(rtweets)
 ncol(rtweets)
 ```
 
 ```{r}
-# count total number if favourites, don't include tweets that are quoted
+# count total number of favourite tweets, don't include tweets that are quoted
+
 rtweets %>% 
   filter(is_quote == FALSE) %>% 
   summarise(total = sum(favorite_count))
 ```
 
 ```{r}
-# summarise mean number by source 
+# summarise the mean number of retweets by source
 
 rtweets %>%
   filter(is_quote == FALSE) %>% # omit quoted tweets
@@ -31,6 +34,9 @@ rtweets %>%
 ```
 
 ```{r}
+# count the number of likes by media type, and arrange them from most likes to least 
+# Assume that any tweets without a listed media type are of type “text”
+
 rtweets %>% 
   mutate(media_type2 = replace_na(media_type, "text")) %>% 
   group_by(media_type2) %>% 
@@ -39,20 +45,30 @@ rtweets %>%
 ```
 
 ```{r}
+# find the mean number of characters a tweet contains
+
 rtweets %>% 
   summarise(avg_tweet_length = mean(display_text_width))
 ```
+
 ```{r}
-codeclan_info <- read_csv("data/code_clan_info.csv")
+# alternative way of testing the str_length function
+
+code_clan_tweets_text <- rtweets %>%
+  mutate(count_str_length = str_length(text)) %>%
+  select(count_str_length, display_text_width)
 ```
 
 
 ```{r}
+# join it to the code_clan_tweets tibble, so that you have a status_url for each tweet
+
 codeclan_all <- left_join(rtweets, codeclan_info, by = "tweet_id")
-codeclan_all
 ```
 
 ```{r}
+# create a variable which has all the hashtags in lowercase for analysis
+
 codeclan_hashtags <- codeclan_all%>% 
   select(tweet_id, hashtags) %>%
   mutate(lowcase_hashtag = str_to_lower(hashtags)) %>%
@@ -63,16 +79,29 @@ head(codeclan_hashtags)
 ```
 
 ```{r}
-# use the str_sub function to get the first 2 letters of each tweet
+# use the str_sub function to get tweets with more than one hashtag (get the first 2 letters of each tweet)
 
 hashtags_multiple <- codeclan_hashtags %>% 
   mutate(first_letters = str_sub(lowcase_hashtag, 1, 2)) %>%
   filter(str_detect(first_letters, "c\\("))
 
-head(hashtags_multiple)
+hashtags_multiple
 ```
 
 ```{r}
+# find all cases where a tweet text mentions edinburgh, and count in how many tweets it appears
+
+rtweets %>% 
+  select(text) %>% 
+  mutate(lower_case_text = str_to_lower(text)) %>% 
+  filter(str_detect(lower_case_text, "edinburgh")) %>% 
+  summarise(edi_mentioned = n())
+  
+```
+
+```{r}
+# use str_extract_all and regex to find usernames tweeted by CodeClan
+
 user_pattern <- "@[a-zA-Z0-9_]+"
 tweets <- rtweets %>% 
   select(text)
