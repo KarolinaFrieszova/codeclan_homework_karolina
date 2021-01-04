@@ -1,4 +1,5 @@
 /* 1. Get a table of all employees details, together with their local_account_no and local_sort_code, if they have them. */
+
 SELECT
 	e.*,
 	pd.local_account_no,
@@ -68,17 +69,17 @@ SELECT
 	teams.name AS team_name,
 	teams.charge_cost::INT * team_sizes.size AS total_day_chart
 FROM teams INNER JOIN team_sizes
-ON teams.id = team_sizes.id
+ON teams.id = team_sizes.id;
 
 /* 7. How would you amend your query from question 6 above to show only those teams with a total_day_charge greater than 5000? */
 
 SELECT 
   t.name,
   COUNT(e.id) * CAST(t.charge_cost AS INT) AS total_day_charge
-FROM employees AS e INNER JOIN teams AS t
+FROM employees AS e INNER JOIN teams AS t 
 ON e.team_id = t.id
 GROUP BY t.id
-HAVING COUNT(e.id) * CAST(t.charge_cost AS INT) > 5000
+HAVING COUNT(e.id) * CAST(t.charge_cost AS INT) > 5000;
 
 -- EXTENSION
 
@@ -86,11 +87,49 @@ HAVING COUNT(e.id) * CAST(t.charge_cost AS INT) > 5000
 
 SELECT
 	COUNT(DISTINCT(employee_id)) AS num_employees_on_committee
-FROM employees_committees
+FROM employees_committees;
 
 /* 2. How many of the employees do not serve on a committee? */
 
+SELECT 
+  COUNT(*) AS num_not_in_committees
+FROM employees e
+LEFT JOIN employees_committees ec 
+ON e.id = ec.employee_id 
+WHERE ec.employee_id IS NULL;
 
+/* or using two subqueries */
 
+SELECT 
+  (SELECT COUNT(id) FROM employees) -
+  (SELECT COUNT(DISTINCT(employee_id)) FROM employees_committees)
+    AS num_not_in_committees;
 
+/* 3. Get the full employee details (including committee name) 
+ * of any committee members based in China. */
+   
+SELECT 
+  e.*, 
+  c.name AS committee_name
+FROM employees AS e INNER JOIN employees_committees AS ec
+ON e.id = ec.employee_id
+INNER JOIN committees AS c
+ON ec.committee_id = c.id
+WHERE e.country = 'China';
 
+/* 4. Group committee members into the teams in which they work,
+ * counting the number of committee members in each team 
+ * (including teams with no committee members). Order the list 
+ * by the number of committee members, highest first. */
+
+SELECT 
+  t.name AS team_name, 
+  COUNT(DISTINCT(e.id)) AS num_committee_members
+FROM employees AS e INNER JOIN employees_committees AS ec
+ON e.id = ec.employee_id
+INNER JOIN committees AS c
+ON ec.committee_id = c.id
+RIGHT JOIN teams AS t
+ON e.team_id = t.id
+GROUP BY t.name
+ORDER BY num_committee_members DESC NULLS LAST;
