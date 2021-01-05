@@ -1,0 +1,98 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(CodeClanData)
+library(tidyverse)
+```
+
+```{r}
+backpack <- backpack
+```
+
+```{r}
+a <- unique(backpack$backpack_weight)
+max(a)
+min(a)
+```
+
+2.
+
+```{r}
+ggplot(backpack)+
+  aes(x = backpack_weight)+
+  geom_histogram(colour = "white", binwidth = 5)+
+  labs(title = "Distribution of backpack weights carried by students\n",
+       x = "\nbackpack weight (lbs)",
+       y = "number of students\n")
+
+```
+Description: The most common weight of student backpack is 10 pounds. The majority of students carry backpack that weight between 5 to 15 pounds.
+
+3. 
+```{r}
+ggplot(backpack)+
+  aes(x = backpack_weight, fill = sex)+
+  geom_histogram(colour = "white", position = "dodge", binwidth = 5)+
+  labs(title = "Distribution of backpack weights carried by students",
+       subtitle = "Differences between gender\n",
+       x = "\nbackpack weight (lbs)",
+       y = "number of students\n",
+       fill = "gender")
+```
+Description: There is overall higher number of Female students carrying backpacks than Male students. 
+
+4. 
+
+```{r}
+ggplot(backpack)+
+  aes(x = body_weight, y = backpack_weight)+
+  geom_point()+
+  geom_smooth()+
+  labs(title = "Relationship between body weight and backpack weight\n",
+       x = "\nbody weight (lbs)",
+       y = "backpack weight (lbs)\n")
+```
+Description: There is no relationship between body weight and student backpack weight. Most of the students carry backpacks of weight 5 to 20 pounds with no relation to the body weight. 
+
+5. 
+
+```{r}
+ggplot(backpack)+
+  aes(x = body_weight, y = backpack_weight, colour = sex)+
+  geom_point()+
+  geom_smooth()+
+  facet_wrap(~ sex)+
+  labs(title = "Relationship between body weight and backpack weight",
+       subtitle = "Different between gender\n",
+       x = "\nstudent weight (lbs)",
+       y = "backpack weight (lbs)\n")
+```
+Female backpack weight is mainly centered around 5 to 15 pounds and weight is centered around 100 to 170 pounds. 
+While Male backpack weight is mostly in between 5 to 20 pounds and weight around 125 to 200 pounds. 
+
+6. 
+
+```{r}
+ggplot(backpack)+
+  aes(x = back_problems)+
+  geom_bar(fill = "")+
+  coord_polar()
+```
+
+7.
+
+```{r}
+ggplot(backpack)+
+  aes(x = back_problems, fill = sex)+
+  geom_bar()
+```
+
+8.
+
+```{r}
+
+```
+
