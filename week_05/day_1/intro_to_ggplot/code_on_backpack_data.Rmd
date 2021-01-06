@@ -12,12 +12,6 @@ library(tidyverse)
 backpack <- backpack
 ```
 
-```{r}
-a <- unique(backpack$backpack_weight)
-max(a)
-min(a)
-```
-
 2.
 
 ```{r}
@@ -52,7 +46,7 @@ ggplot(backpack)+
   geom_point()+
   geom_smooth()+
   labs(title = "Relationship between body weight and backpack weight\n",
-       x = "\nbody weight (lbs)",
+       x = "\nstudent weight (lbs)",
        y = "backpack weight (lbs)\n")
 ```
 Description: There is no relationship between body weight and student backpack weight. Most of the students carry backpacks of weight 5 to 20 pounds with no relation to the body weight. 
@@ -76,19 +70,34 @@ While Male backpack weight is mostly in between 5 to 20 pounds and weight around
 6. 
 
 ```{r}
-ggplot(backpack)+
+backpack_bp <- backpack %>% 
+  mutate(back_problems = if_else(back_problems == 1, "yes", "no"))
+
+ggplot(backpack_bp)+
   aes(x = back_problems)+
-  geom_bar(fill = "")+
-  coord_polar()
+  geom_bar(fill = "light blue")+
+  labs(title = "Students reporting back problems\n",
+       x = "back problems",
+       y = "number of students\n")
+
 ```
+
+Description: Just under half of the students report back problems.
 
 7.
 
 ```{r}
-ggplot(backpack)+
+ggplot(backpack_bp)+
   aes(x = back_problems, fill = sex)+
-  geom_bar()
+  geom_bar()+
+  facet_wrap(~sex)+
+  labs(title = "Students reporting back problems\n",
+       subtitle = "Difference between gender",
+       x = "\nback problems",
+       y = "number of students\n")
 ```
+
+Description: Majority of students reporting back pain are females.
 
 8.
 
