@@ -18,6 +18,7 @@ backpack <- backpack
 ggplot(backpack)+
   aes(x = backpack_weight)+
   geom_histogram(colour = "white", binwidth = 5)+
+  scale_x_continuous(breaks = c(0,5,10,15,20,25,30,35))+
   labs(title = "Distribution of backpack weights carried by students\n",
        x = "\nbackpack weight (lbs)",
        y = "number of students\n")
@@ -30,6 +31,7 @@ Description: The most common weight of student backpack is 10 pounds. The majori
 ggplot(backpack)+
   aes(x = backpack_weight, fill = sex)+
   geom_histogram(colour = "white", position = "dodge", binwidth = 5)+
+  scale_x_continuous(breaks = c(0,5,10,15,20,25,30,35))
   labs(title = "Distribution of backpack weights carried by students",
        subtitle = "Differences between gender\n",
        x = "\nbackpack weight (lbs)",
