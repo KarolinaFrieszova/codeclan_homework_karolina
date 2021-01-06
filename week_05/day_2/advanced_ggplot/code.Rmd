@@ -1,0 +1,72 @@
+---
+title: "ggplot"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+revenue_breakdown <- CodeClanData::qb_revenue_breakdown
+monthly_sales <- CodeClanData::qb_monthly_sales
+competitors <- CodeClanData::qb_competitors
+device_data <- CodeClanData::qb_device_data
+```
+
+1.
+
+```{r}
+ggplot(revenue_breakdown)+
+  aes(x = Year, y = Revenue, group = Product, fill = Product)+
+  geom_bar(stat = "identity")
+```
+2. 
+
+```{r}
+kwikbit_sales <- monthly_sales %>% 
+  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
+  mutate(Cashflow = recode(Cashflow, "Kwikbit Unit 1 Sales" = "KwikBit Unit 1"))
+
+ggplot(kwikbit_sales)+
+  aes(x = Date, y = Amount)+
+  geom_line()
+```
+3.
+
+```{r}
+revenue_cost <- monthly_sales %>% 
+  filter(Cashflow %in% c("Total Revenue", "Cost"))
+
+ggplot(revenue_cost)+
+  aes(x = Date, y = Amount, colour = Cashflow)+
+  geom_line()
+```
+
+4. 
+
+```{r}
+ggplot(competitors)+
+  aes(x = Year, y = Revenue, group = Company, fill = Company)+
+  geom_area()
+```
+5.
+
+```{r}
+ggplot(competitors)+
+  aes(x = Year, y = Revenue, group = Company, colour = Company)+
+  geom_line()+
+  geom_point()
+```
+
+6.
+# needs to be redone
+```{r}
+ggplot(device_data)+
+  aes(x = hours, y = counts, colour = device)+
+  geom_line()
+  
+```
+
+
+
