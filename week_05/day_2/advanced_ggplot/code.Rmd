@@ -19,7 +19,15 @@ device_data <- CodeClanData::qb_device_data
 ```{r}
 ggplot(revenue_breakdown)+
   aes(x = Year, y = Revenue, group = Product, fill = Product)+
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity")+
+  labs(title = "Sources of revenue for two years\n",
+       x = "\nYear",
+       y = "Revenue\n")+
+  theme_bw(base_size = 12)+
+  scale_fill_manual(values = c("Accessories" = "#E89FE9",
+                               "Smart Watches" = "#B6A7B5",
+                               "Subscription Services" = "#50434F",
+                               "Trackers" = "#F9A472"))
 ```
 2. 
 
@@ -30,7 +38,10 @@ kwikbit_sales <- monthly_sales %>%
 
 ggplot(kwikbit_sales)+
   aes(x = Date, y = Amount)+
-  geom_line()
+  geom_line()+
+  labs(title = "Monthly sales for flagship product",
+       x = "Period")+
+  theme_bw(base_size = 12)
 ```
 3.
 
@@ -40,31 +51,56 @@ revenue_cost <- monthly_sales %>%
 
 ggplot(revenue_cost)+
   aes(x = Date, y = Amount, colour = Cashflow)+
-  geom_line()
+  geom_line()+
+  labs(title = "Monthly revenue and costs over the last year",
+       x = "Period")+
+  theme_bw(base_size = 12)+
+  scale_colour_manual(values = c("Cost" = "#E89FE9",
+                               "Total Revenue" = "#F9A472"))
 ```
 
 4. 
 
 ```{r}
-ggplot(competitors)+
+competitors1 <- competitors %>% 
+  mutate(Revenue = Revenue/1000000)
+
+ggplot(competitors1)+
   aes(x = Year, y = Revenue, group = Company, fill = Company)+
-  geom_area()
+  geom_area()+
+  labs(title = "Competitors' annual sales of personal fitness trackers\n",
+       x = "\nYear",
+       y = "Revenue (million units)\n")+
+  theme_bw(base_size = 12)+
+  scale_fill_manual(values = c("Competitor 1" = "#E89FE9",
+                               "Competitor 2" = "#B6A7B5",
+                               "Competitor 3" = "#50434F",
+                               "Competitor 4" = "#F9A472"))
 ```
 5.
 
 ```{r}
-ggplot(competitors)+
+ggplot(competitors1)+
   aes(x = Year, y = Revenue, group = Company, colour = Company)+
   geom_line()+
-  geom_point()
+  geom_point()+
+  labs(title = "Sales of competitors over the past 5 years\n",
+       x = "\nYear",
+       y = "Revenue (million units)\n")+
+  theme_bw(base_size = 12)+
+  scale_colour_manual(values = c("Competitor 1" = "#E89FE9",
+                               "Competitor 2" = "#B6A7B5",
+                               "Competitor 3" = "#50434F",
+                               "Competitor 4" = "#F9A472"))
 ```
 
 6.
 # needs to be redone
 ```{r}
 ggplot(device_data)+
-  aes(x = hours, y = counts, colour = device)+
-  geom_line()
+  aes(x = hours, y = counts, group = comp)+
+  geom_line()+
+  theme_bw(base_size = 12)
   
 ```
 
