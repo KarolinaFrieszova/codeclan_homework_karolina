@@ -10,7 +10,7 @@ shinyUI(fluidPage(
     
     theme = shinytheme("simplex"),
     
-    titlePanel("Video game scores by user"),
+    titlePanel("Video game by users score"),
     br(),
     
     fluidRow(
