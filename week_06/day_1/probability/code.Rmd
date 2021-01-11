@@ -1,0 +1,211 @@
+---
+title: "Probability"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(gtools)
+library(tidyverse)
+```
+
+```{r}
+titanic <- read_csv("data/titanic.csv")
+```
+
+```{r}
+unique(titanic$class)
+```
+
+```{r}
+names(titanic)
+```
+
+```{r}
+titanic <- titanic %>% 
+  mutate(crew = if_else(class %in% c("1st", "2nd", "3rd"), FALSE, TRUE))
+```
+
+prob(survived | crew)
+```{r}
+titanic %>% 
+  filter(crew == T) %>% 
+  summarise(crew_count = n())
+```
+```{r}
+titanic %>% 
+  filter(crew == T & survived == "yes") %>% 
+  summarise(survived_crew_count = n())
+```
+```{r}
+211/890
+```
+
+The proportion of crew that survived was 24%.
+
+
+prob(survived | passenger)
+```{r}
+titanic %>% 
+  filter(crew == F) %>% 
+  summarise(crew_count = n())
+```
+```{r}
+titanic %>% 
+  filter(crew == F & survived == "yes") %>% 
+  summarise(survived_crew_count = n())
+```
+```{r}
+500/1317
+```
+
+The proportion of passengers that survived was 38%.
+
+1. If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+```{r}
+rolldie(1) %>% 
+  filter(X1 < 5)
+
+4/6
+```
+
+2. How many outcomes are there in the sample space of an experiment in which we toss three dice?
+- 216 possible outcomes if we toss three dice
+```{r}
+rolldie(3)
+```
+
+3. 
+i.
+```{r}
+rolldie(4) %>% 
+  mutate(total = X1 + X2 + X3 + X4) %>% 
+  filter(total %in% c(5, 6, 7))
+```
+ii.
+what is the probability of this event?
+
+```{r}
+34/1296
+```
+
+iii.
+All assumptions are fair.
+
+4. 
+```{r}
+permutations(
+  n = 5,
+  r = 5
+) %>% 
+  as_tibble() %>% 
+  nrow()
+```
+```{r}
+1/120
+```
+
+5. 
+i. what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right? - 1/46656
+
+```{r}
+rolldie(6)
+1/46656
+```
+
+
+ii. what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
+```{r}
+rolldie(6) %>% 
+  filter(isin(., c(1,2,3,4,5,6), ordered = FALSE)) %>% 
+  nrow()
+```
+```{r}
+factorial(6)
+```
+
+6. If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades?
+
+```{r}
+cards() %>% 
+  mutate(colour = if_else(suit %in% c("Club", "Spade"), "black", "red")) %>% 
+  filter(suit == "Spade" & colour == "black")
+```
+```{r}
+13/52 = 1/4
+```
+
+7. Eight patients: Alice, Bob, Carmen, Dinesh, Ella, Fergus, Gianna and Henry are waiting to see a doctor, but only five appointment slots are left today.
+
+i. In how many different orders can the doctor see patients today?
+
+```{r}
+patients <- c("Alice", "Bob", "Carmen", "Dinesh", "Ella", "Fergus", "Gianna", "Henry")
+
+permutations(
+  n = 8,
+  r = 5,
+  v = patients
+) %>% 
+  as_tibble() %>% 
+  nrow()
+```
+```{r}
+# or
+
+8*7*6*5*4
+```
+
+ii. What is the probability of Gianna and Dinesh both being seen today?
+
+```{r}
+permutations(
+  n = 8,
+  r = 5,
+  v = patients
+) %>% 
+  as_tibble() %>% 
+  filter(isin(., c("Gianna", "Dinesh"))) %>% 
+  nrow()
+```
+
+```{r}
+2400/6720
+```
+
+îii. What is the probability of Gianna being seen before Dinesh today?
+
+```{r}
+permutations(
+  n = 8,
+  r = 5,
+  v = patients
+) %>% 
+  as_tibble() %>% 
+  filter(isin(., c("Gianna", "Dinesh"), ordered = TRUE)) %>% 
+  nrow()
+```
+
+```{r}
+1200/6720
+```
+
+8. Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+
+```{r}
+240
+```
+
+9.  If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
+
+```{r}
+combinations(
+  n = 8,
+  r = 5
+) %>% 
+  as_tibble() %>% 
+  nrow()
+```
+
+10. 
