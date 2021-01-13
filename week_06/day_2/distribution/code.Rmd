@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(janitor)
+library(tidyverse)
+library(skimr)
+```
+
+1. 
+```{r}
+phones <- read_csv("data/20190928-items.csv") %>% 
+  clean_names()
+```
+
+2. 
+```{r}
+phones %>% 
+  group_by(brand) %>% 
+  summarise(count = n()) %>% 
+  slice_max(count)
+```
+
+```{r}
+samsung_phones <- phones %>% 
+  filter(brand == "Samsung")
+
+ggplot(samsung_phones)+
+  aes(x = rating)+
+  #geom_density()
+  geom_histogram(col = "white")
+```
+
+```{r}
+skim(samsung_phones$rating)
+```
+```{r}
+
+samsung_phones %>% 
+  ggplot()+
+  geom_line(aes(x = rating, y = dnorm(x = rating, mean = 3.57, sd = 0.685)))
+
+
+
+three_norms <- tibble(
+  x =  seq(0, 20, 0.1),
+  f1_x = dnorm(x = x, mean = 10, sd = 1), 
+  f2_x = dnorm(x = x, mean = 10, sd = 2),
+  f3_x = dnorm(x = x, mean = 10, sd = 3)
+)
+
+```
+```{r}
+samsung_stats <- samsung_phones %>%
+  summarise(
+    num = n(),
+    mean = mean(rating),
+    sd = sd(rating)
+  )
+samsung_stats
+```
+
+
+```{r}
+samsung_phones %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 25) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = samsung_stats$mean, 
+      sd = samsung_stats$sd
+    ),
+    col = "red"
+  )
+```
+
+4.
+
+```{r}
+samsung_phones %>%
+  filter(rating >= samsung_stats$mean - samsung_stats$sd) %>%
+  filter(rating <= samsung_stats$mean + samsung_stats$sd) %>%
+  summarise(prop_within_1sd = n() / nrow(samsung_phones))
+```
+
+```{r}
+samsung_phones <- samsung_phones %>% 
+  mutate(z_rating = scale(rating))
+```
+
+```{r}
+samsung_phones %>% 
+  filter(between(z_rating, left = -2, right = 2)) %>% 
+  summarise(prop_withing_2sd = n() / nrow(samsung_phones))
+```
+```{r}
+samsung_phones %>% 
+  filter(between(z_rating, left = -3, right = 3)) %>% 
+  summarise(prop_withing_3sd = n() / nrow(samsung_phones))
+```
+```{r}
+samsung_phones %>% 
+  filter(!between(z_rating, left = -2, right = 2)) %>% 
+  summarise(prop_outside_3sd = n() / nrow(samsung_phones))
+```
+
