@@ -1,0 +1,116 @@
+---
+title: "Hypothesis tests & probability - homework"
+output: html_notebook
+---
+----------------------------------
+1.1 Hypothesis testing - practical
+----------------------------------
+```{r}
+library(tidyverse)
+library(infer)
+data(msleep)
+```
+
+#1. 
+Jabberwockies sleep for around 7 hours a night, on average. Perform an appropriate statistical test to determine whether the mean sleep_total in the sampled population of animal types differs from the typical value for jabberwockies.
+
+H0: μ(sleep_total) = 7
+Ha: μ(sleep_total) ≠ 7
+
+significance level = 0.05 (5%)
+
+```{r}
+# generate the null distribution, assuming Null Hypothesis is true
+
+null_distribution <- msleep %>% 
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7) %>% 
+  generate(reps = 10000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+# value of observed statistic, the mean(sleep_total)
+
+observed_stat <- msleep %>% 
+  summarise(mean_sleep_total = mean(sleep_total))
+
+# Visualise the null distribution
+
+null_distribution %>%
+  visualise() +
+  shade_p_value(obs_stat = observed_stat$mean_sleep_total, direction = "both")
+
+# Calculate p-value
+
+p_value <- null_distribution %>% 
+  get_p_value(obs_stat = observed_stat$mean_sleep_total, direction = "both")
+```
+
+# Conclusion:
+
+p_value < 0.001 and significance level = 0.05.
+0.001 < 0.05 (p_value < significance level)
+
+Reject the Null.
+
+There is enough evidence to believe that the avarage sleep hours (mean sleep_total) 
+in the sampled population of animals differs from the typical (7 hours) value for jabberwockies. 
+
+# 2. 
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+
+
+```{r}
+msleep %>% 
+  select(vore, sleep_total) %>% 
+  filter(vore == "omni")
+```
+
+# 3
+Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
+
+H0: π(is_domesticated == "yes") = 0.05
+Ha: π(is_domesticated == "yes") > 0.05
+
+α = 0.05
+
+```{r}
+# creating an is_domesticated variable for the analysis
+
+msleep_tidy <- msleep %>% 
+  filter(!is.na(conservation)) %>% 
+  mutate(is_domesticated = if_else(conservation == "domesticated", "yes", "no"))
+
+
+# generating null sampling distribution, using simulation
+
+null_distribution <- msleep_tidy %>% 
+  specify(response = is_domesticated, success = "yes") %>% 
+  hypothesise(null = "point", p = 0.5) %>% 
+  generate(reps = 5000, type = "simulate") %>% 
+  calculate(stat = "prop")
+
+# calculate point estimate of our sample population
+observed_stat <- msleep_tidy %>% 
+  specify(response = is_domesticated, success = "yes") %>% 
+  calculate(stat = "prop")
+
+
+# visualise sampling distribution
+
+null_distribution %>% 
+  visualise(bins = 30)+
+  shade_p_value(obs_stat = observed_stat, direction = "greater")
+
+# calculate p-value
+
+p_value <- null_distribution %>% 
+  get_p_value(obs_stat = observed_stat, direction = "greater")
+```
+
+# Conclusion
+
+p_value (1) > α (0.05)
+
+Fail to reject the null hypothesis.
+
+There is not sufficient evidence to believe that the proportion of domesticated animal types in the population of animal types is greater than 5%.
