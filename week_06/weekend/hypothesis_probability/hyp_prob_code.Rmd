@@ -58,12 +58,64 @@ in the sampled population of animals differs from the typical (7 hours) value fo
 # 2. 
 Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
 
+- two-sample independent hypothesis test
+
+α = 0.05
+
+H0: μ sleep_total(omnivores) − μ sleep_total(herbivores) = 0
+Ha: μ sleep_total(omnivores) − μ sleep_total(herbivores) > 0
 
 ```{r}
-msleep %>% 
+# selecting the data we want to use
+
+msleep_filtered <- msleep %>% 
   select(vore, sleep_total) %>% 
-  filter(vore == "omni")
+  filter(vore %in% c("omni", "herbi"))
+
+# visualise the distributions and check the sizes of both samples
+
+msleep_filtered %>%
+  group_by(vore) %>%
+  summarise(n = n())
+
+msleep_filtered %>%
+  ggplot(aes(y = sleep_total, x = vore)) +
+  geom_boxplot()
+
+# using permutation to generate the null distribution
+
+null_distribution <- msleep_filtered %>% 
+  specify(sleep_total ~ vore) %>% # testing whether sleep_total varies with vore
+  hypothesize(null = "independence") %>% # the null hypothesis is there is no relationship
+  generate(reps = 1000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+
+# calculate observed statistic 
+
+observed_stat <- msleep_filtered %>% 
+  specify(sleep_total ~ vore) %>%
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+
+# visualise the null distribution and where the observed statistic lies on the distribution
+
+null_distribution %>%
+  visualise() +
+  shade_p_value(obs_stat = observed_stat, direction = "greater")
+
+# calculate p-value
+
+p_value <- null_distribution %>%
+  get_p_value(obs_stat = observed_stat, direction = "greater")
+
+p_value
 ```
+# Conclusion
+
+p-value (0.111) > α (0.05) 
+ We fail to reject the Null Hypothesis.
+
+We can conclude that there is not enough evidence in our data to suggest that omnivores sleep on average for significantly longer than herbivores.
+
 
 # 3
 Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
