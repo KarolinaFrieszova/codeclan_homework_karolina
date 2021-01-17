@@ -1,0 +1,58 @@
+---
+title: "2.1 Market Basket Analysis"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+
+transactions <- read_csv("data/online_retail_subset.csv") %>% 
+  clean_names()
+```
+
+# Association rules
+
+sup(A) = P(A) = number of transactions involving A / total number of transactions
+
+```{r}
+count_transactions <- transactions %>% 
+  distinct(invoice_no) %>% 
+  summarise(n())
+
+count_transactions
+
+# 1. Calculate the support for item A
+
+# assuming that 1 transaction has 1 ctoce_code
+
+support_a <- transactions %>% 
+  filter(stock_code == "22469") %>% 
+  summarise(n() / count_transactions)
+
+support_a
+
+# 2. Calculate the support and confidence for rule (A→B)
+
+support_a_b <- transactions %>% 
+  filter(stock_code %in% c("21110", "22469")) %>% 
+  summarise(n() / count_transactions)
+
+support_a_b
+
+# incorrect
+
+confidence_a_b <- transactions %>% 
+  filter(stock_code %in% c("21110", "22469")) %>% 
+  group_by(invoice_no) %>% 
+  mutate(count = n()) %>% 
+  filter(count == 2) %>% 
+  summarise(n())
+
+
+
+
+```
+
+
+

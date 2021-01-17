@@ -2,6 +2,10 @@
 title: "1.2 Hypothesis testing - interpretation"
 output: html_notebook
 ---
+------------------------------
+1.2.1 Defining the Hypothesis
+------------------------------
+
 # 1.
 You work for a independent coffee shop. The boss tells you that she thinks that around 40% of people in the town (population 30,000) know of the coffee shop, but you are skeptical of the estimate. You conduct a random survey of 200 people in the town, asking if respondents are aware of your coffee shop. You want to use the sample to test the hypothesis that 40% or more of the town’s population have heard of the coffee shop.
 -->
@@ -35,3 +39,31 @@ H0: μ (width - 145) = 0
 Ha: μ (width -145) ≠ 0
 
 We will use bootstrapping to generate the null distribution.
+
+------------------------------
+1.2.2 Interpreting the results
+------------------------------
+
+1. Coffee shop problem. Significance level: 0.05, calculated p-value: 0.07
+
+p_value (0.07) > significance level (0.05)
+
+We fail to reject the null hypothesis. 
+
+We don't have enough evidence to say that 40% or more of the town’s population have heard of the coffee shop.
+
+2. Website company problem. Significance level: 0.01, p-value: 0.006
+
+p_value (0.006) < significance level (0.01)
+
+We reject the null hypothesis.
+
+There is enough evidence to believe that website users overall are more likely to click on the banner if positioned at the top of the page.
+
+3. Manufacturing company problem. Significance level: 0.05, p-value: 0.55
+
+p_value (0.55) > significance level (0.05)
+
+We fail to reject the null hypothesis.
+
+There is not sufficient evidence to conclude that the process overall has drifted.
