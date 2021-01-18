@@ -1797,6 +1797,8 @@ summary {
 
 
 <!-- rnb-text-begin -->
+<div id="note-go-over-as-incorrect" class="section level1">
+<h1>note: go over as incorrect</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGphbml0b3IpXG5cbnRyYW5zYWN0aW9ucyA8LSByZWFkX2NzdihcImRhdGEvb25saW5lX3JldGFpbF9zdWJzZXQuY3N2XCIpICU+JSBcbiAgY2xlYW5fbmFtZXMoKVxuYGBgIn0= -->
@@ -1806,21 +1808,9 @@ library(janitor)
 transactions &lt;- read_csv(&quot;data/online_retail_subset.csv&quot;) %&gt;% 
   clean_names()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5jb2xzKFxuICBJbnZvaWNlTm8gPSBjb2xfY2hhcmFjdGVyKCksXG4gIFN0b2NrQ29kZSA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgRGVzY3JpcHRpb24gPSBjb2xfY2hhcmFjdGVyKCksXG4gIEludm9pY2VEYXRlID0gY29sX2NoYXJhY3RlcigpLFxuICBVbml0UHJpY2UgPSBjb2xfZG91YmxlKCksXG4gIEN1c3RvbWVySUQgPSBjb2xfZG91YmxlKCksXG4gIENvdW50cnkgPSBjb2xfY2hhcmFjdGVyKClcbilcbiJ9 -->
-<pre><code>
-── Column specification ──────────────────────────────────────────────────────────────────
-cols(
-  InvoiceNo = col_character(),
-  StockCode = col_character(),
-  Description = col_character(),
-  InvoiceDate = col_character(),
-  UnitPrice = col_double(),
-  CustomerID = col_double(),
-  Country = col_character()
-)</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
 <div id="association-rules" class="section level1">
 <h1>Association rules</h1>
 <p>sup(A) = P(A) = number of transactions involving A / total number of transactions</p>
@@ -1850,7 +1840,7 @@ cols(
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiMi4xIE1hcmtldCBCYXNrZXQgQW5hbHlzaXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShqYW5pdG9yKQoKdHJhbnNhY3Rpb25zIDwtIHJlYWRfY3N2KCJkYXRhL29ubGluZV9yZXRhaWxfc3Vic2V0LmNzdiIpICU+JSAKICBjbGVhbl9uYW1lcygpCmBgYAoKIyBBc3NvY2lhdGlvbiBydWxlcwoKc3VwKEEpID0gUChBKSA9IG51bWJlciBvZiB0cmFuc2FjdGlvbnMgaW52b2x2aW5nIEEgLyB0b3RhbCBudW1iZXIgb2YgdHJhbnNhY3Rpb25zCgpgYGB7cn0KY291bnRfdHJhbnNhY3Rpb25zIDwtIHRyYW5zYWN0aW9ucyAlPiUgCiAgZGlzdGluY3QoaW52b2ljZV9ubykgJT4lIAogIHN1bW1hcmlzZShuKCkpCgpjb3VudF90cmFuc2FjdGlvbnMKCiMgMS4gQ2FsY3VsYXRlIHRoZSBzdXBwb3J0IGZvciBpdGVtIEEKCiMgYXNzdW1pbmcgdGhhdCAxIHRyYW5zYWN0aW9uIGhhcyAxIGN0b2NlX2NvZGUKCnN1cHBvcnRfYSA8LSB0cmFuc2FjdGlvbnMgJT4lIAogIGZpbHRlcihzdG9ja19jb2RlID09ICIyMjQ2OSIpICU+JSAKICBzdW1tYXJpc2UobigpIC8gY291bnRfdHJhbnNhY3Rpb25zKQoKc3VwcG9ydF9hCgojIDIuIENhbGN1bGF0ZSB0aGUgc3VwcG9ydCBhbmQgY29uZmlkZW5jZSBmb3IgcnVsZSAoQeKGkkIpCgpzdXBwb3J0X2FfYiA8LSB0cmFuc2FjdGlvbnMgJT4lIAogIGZpbHRlcihzdG9ja19jb2RlICVpbiUgYygiMjExMTAiLCAiMjI0NjkiKSkgJT4lIAogIHN1bW1hcmlzZShuKCkgLyBjb3VudF90cmFuc2FjdGlvbnMpCgpzdXBwb3J0X2FfYgoKIyBpbmNvcnJlY3QKCmNvbmZpZGVuY2VfYV9iIDwtIHRyYW5zYWN0aW9ucyAlPiUgCiAgZmlsdGVyKHN0b2NrX2NvZGUgJWluJSBjKCIyMTExMCIsICIyMjQ2OSIpKSAlPiUgCiAgZ3JvdXBfYnkoaW52b2ljZV9ubykgJT4lIAogIG11dGF0ZShjb3VudCA9IG4oKSkgJT4lIAogIGZpbHRlcihjb3VudCA9PSAyKSAlPiUgCiAgc3VtbWFyaXNlKG4oKSkKCgoKCmBgYAoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiMi4xIE1hcmtldCBCYXNrZXQgQW5hbHlzaXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMgbm90ZTogZ28gb3ZlciBhcyBpbmNvcnJlY3QKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShqYW5pdG9yKQoKdHJhbnNhY3Rpb25zIDwtIHJlYWRfY3N2KCJkYXRhL29ubGluZV9yZXRhaWxfc3Vic2V0LmNzdiIpICU+JSAKICBjbGVhbl9uYW1lcygpCmBgYAoKIyBBc3NvY2lhdGlvbiBydWxlcwoKc3VwKEEpID0gUChBKSA9IG51bWJlciBvZiB0cmFuc2FjdGlvbnMgaW52b2x2aW5nIEEgLyB0b3RhbCBudW1iZXIgb2YgdHJhbnNhY3Rpb25zCgpgYGB7cn0KY291bnRfdHJhbnNhY3Rpb25zIDwtIHRyYW5zYWN0aW9ucyAlPiUgCiAgZGlzdGluY3QoaW52b2ljZV9ubykgJT4lIAogIHN1bW1hcmlzZShuKCkpCgpjb3VudF90cmFuc2FjdGlvbnMKCiMgMS4gQ2FsY3VsYXRlIHRoZSBzdXBwb3J0IGZvciBpdGVtIEEKCiMgYXNzdW1pbmcgdGhhdCAxIHRyYW5zYWN0aW9uIGhhcyAxIGN0b2NlX2NvZGUKCnN1cHBvcnRfYSA8LSB0cmFuc2FjdGlvbnMgJT4lIAogIGZpbHRlcihzdG9ja19jb2RlID09ICIyMjQ2OSIpICU+JSAKICBzdW1tYXJpc2UobigpIC8gY291bnRfdHJhbnNhY3Rpb25zKQoKc3VwcG9ydF9hCgojIDIuIENhbGN1bGF0ZSB0aGUgc3VwcG9ydCBhbmQgY29uZmlkZW5jZSBmb3IgcnVsZSAoQeKGkkIpCgpzdXBwb3J0X2FfYiA8LSB0cmFuc2FjdGlvbnMgJT4lIAogIGZpbHRlcihzdG9ja19jb2RlICVpbiUgYygiMjExMTAiLCAiMjI0NjkiKSkgJT4lIAogIHN1bW1hcmlzZShuKCkgLyBjb3VudF90cmFuc2FjdGlvbnMpCgpzdXBwb3J0X2FfYgoKIyBpbmNvcnJlY3QKCmNvbmZpZGVuY2VfYV9iIDwtIHRyYW5zYWN0aW9ucyAlPiUgCiAgZmlsdGVyKHN0b2NrX2NvZGUgJWluJSBjKCIyMTExMCIsICIyMjQ2OSIpKSAlPiUgCiAgZ3JvdXBfYnkoaW52b2ljZV9ubykgJT4lIAogIG11dGF0ZShjb3VudCA9IG4oKSkgJT4lIAogIGZpbHRlcihjb3VudCA9PSAyKSAlPiUgCiAgc3VtbWFyaXNlKG4oKSkKCgoKCmBgYAoKCgo=</div>
 
 
 

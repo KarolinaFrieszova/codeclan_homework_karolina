@@ -1,10 +1,7 @@
 ---
-title: "Hypothesis tests & probability - homework"
+title: "1.1 Hypothesis testing - practical"
 output: html_notebook
 ---
-----------------------------------
-1.1 Hypothesis testing - practical
-----------------------------------
 ```{r}
 library(tidyverse)
 library(infer)
@@ -137,7 +134,7 @@ msleep_tidy <- msleep %>%
 
 null_distribution <- msleep_tidy %>% 
   specify(response = is_domesticated, success = "yes") %>% 
-  hypothesise(null = "point", p = 0.5) %>% 
+  hypothesise(null = "point", p = 0.05) %>% 
   generate(reps = 5000, type = "simulate") %>% 
   calculate(stat = "prop")
 
@@ -157,12 +154,15 @@ null_distribution %>%
 
 p_value <- null_distribution %>% 
   get_p_value(obs_stat = observed_stat, direction = "greater")
+
+options(scipen = 999) # convert scientific notation to number
+p_value
 ```
 
 # Conclusion
 
-p_value (1) > α (0.05)
+p_value (0.0004) < α (0.05)
 
-Fail to reject the null hypothesis.
+We reject the null hypothesis.
 
-There is not sufficient evidence to believe that the proportion of domesticated animal types in the population of animal types is greater than 5%.
+There is sufficient evidence to believe that the proportion of domesticated animal types in the population of animal types is greater than 5%.
