@@ -1,0 +1,117 @@
+---
+title: "NYC Citi Bike trips"
+author: "Karolina Frieszova"
+date: "19/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = FALSE, message = FALSE)
+```
+
+## Introduction
+
+Cycling is an activity which comes with many benefits: health though excercise, car traffic congestion is reduced, and reduction from carbon pollution. In recent years, bike sharing grew in popularity in large cities. 
+
+Since 2013 bicycle sharing scheme 'CitiBike' is available in New York City. There are currently about 14,500 shared bikes which user can hire from about 950 stations across Manhattan, Brooklyn, Queens and Jersey City.
+
+## Our Dataset
+
+Our dataset is a sample from NYC Citi Bike usage of 10 bikes throughout 2018. The data includes event data on each trip, including the trip's start and end times and locations. The customer's gender, birth year and bike usage type.
+
+There are two trip types, a 'Customer' and 'Subscriber'. Where the customer type represents either a day or 3-day pass, and a subscriber represents an annual subscription.
+
+## Data sourse
+
+Data were obtained from [CitiBike](https://www.citibikenyc.com/system-data) website has a vast amount of data available regarding bike hire usage as well as sales of memberships and short-term passes.
+
+```{r}
+# libraries
+
+library(tidyverse)
+library(tsibbledata)
+library(lubridate)
+library(tsibble)
+
+library(leaflet)
+```
+
+```{r cars}
+# create dataset for time series analysis
+
+nyc_bikes_ts <- nyc_bikes %>% 
+  select(start_time, type, bike_id) %>% 
+  mutate(s_month = month(start_time, label = T),
+         s_w_day = wday(start_time, week_start = 1, label = T, abbr = F),
+         bike_id_char = as.character(bike_id),
+         quarter = quarter(start_time))
+```
+
+- The monthly histogram illustrates the pattern in how bike hire in New York City was distributed over the year 2018.
+- It is clear that our ten sample bikes were  mainly hired by annual subscribers. 
+- There was a spike in bike hire in July and August and contrary to that February was the month with lowest amount of rentals. 
+- The graph illustrates that bikes were used less frequently from November to March, and more frequently from April to October. 
+- Bikes weren't much used for short term hires in January, February and December. 
+- The strongest month for short term hires type was July and for annual hire type it was August.
+
+```{r}
+nyc_bikes_ts %>% 
+  index_by(s_month) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_month, group = type, fill = type)+
+  geom_histogram(stat="count", colour = "black")+
+  theme_bw()+
+  labs(title = "Monthly bike hires by trip type\n",
+       x = "\nMonth",
+       y = "Frequency\n",
+       fill = "Trip type")+
+  scale_fill_manual(values = c("Customer" = "#d95f02",
+                               "Subscriber" = "#1b9e77"))
+```
+
+```{r}
+nyc_bikes_ts %>% 
+  index_by(quarter) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = quarter, group = type, fill = type)+
+  geom_histogram(stat="count", colour = "black")+
+  theme_bw()+
+  labs(title = "Quarterly bike hires by trip type\n",
+       x = "\nQuarter",
+       y = "Frequency\n",
+       fill = "Trip type")+
+  scale_fill_manual(values = c("Customer" = "#d95f02",
+                               "Subscriber" = "#1b9e77"))
+```
+
+```{r}
+nyc_bikes_ts %>% 
+  index_by(s_w_day) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_w_day, group = type, color = type)+
+  geom_line(stat="count", lwd = 1)+
+  theme_bw()+
+  labs(title = "Weekly bike hires by trip type",
+       subtitle = "Annual trend\n",
+       x = "\nDays of the week",
+       y = "Frequency\n",
+       color = "Trip type")+
+  scale_colour_manual(values = c("Customer" = "#d95f02",
+                               "Subscriber" = "#1b9e77"))
+```
+
+
+
+
+
+## Conclusion
+
+What is the pattern of bike hires over time (e.g. within a year, month, week, or day)?
+Do bike hire patterns differ between bike rider demographics? (e.g. gender, type of trip, age)
+provide actionable insights to the busines - t relates to key performance indicators (in this case the overall objective is to increase bike hires)
+
+
+1. This can indicate that bike sharing is popular type of transportation between local New Yorkers. 
