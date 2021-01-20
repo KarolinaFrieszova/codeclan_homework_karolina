@@ -12,7 +12,7 @@ library(tidyverse)
 backpack <- backpack
 ```
 
-2.
+2. What is the distribution of backpack weights that students are carrying? Choose an appropriate graph to show the distribution.
 
 ```{r}
 ggplot(backpack)+
@@ -26,7 +26,8 @@ ggplot(backpack)+
 ```
 Description: The most common weight of student backpack is 10 pounds. The majority of students carry backpack that weight between 5 to 15 pounds.
 
-3. 
+3. Are there differences in backpack weight between sex?
+
 ```{r}
 ggplot(backpack)+
   aes(x = backpack_weight, fill = sex)+
@@ -40,26 +41,26 @@ ggplot(backpack)+
 ```
 Description: There is overall higher number of Female students carrying backpacks than Male students. 
 
-4. 
+4. What is the relationship between body weight and backpack weight?
 
 ```{r}
 ggplot(backpack)+
   aes(x = body_weight, y = backpack_weight)+
   geom_point()+
-  geom_smooth()+
+  #geom_smooth(method = "lm", se = FALSE)+
   labs(title = "Relationship between body weight and backpack weight\n",
        x = "\nstudent weight (lbs)",
        y = "backpack weight (lbs)\n")
 ```
 Description: There is no relationship between body weight and student backpack weight. Most of the students carry backpacks of weight 5 to 20 pounds with no relation to the body weight. 
 
-5. 
+5. Is this relationship different between men and women? Choose an appropriate plot and interpret your findings.
 
 ```{r}
 ggplot(backpack)+
   aes(x = body_weight, y = backpack_weight, colour = sex)+
   geom_point()+
-  geom_smooth()+
+  #geom_smooth(method = "lm", se = FALSE)+
   facet_wrap(~ sex)+
   labs(title = "Relationship between body weight and backpack weight",
        subtitle = "Different between gender\n",
@@ -68,8 +69,9 @@ ggplot(backpack)+
 ```
 Female backpack weight is mainly centered around 5 to 15 pounds and weight is centered around 100 to 170 pounds. 
 While Male backpack weight is mostly in between 5 to 20 pounds and weight around 125 to 200 pounds. 
+Plot suggests that women might weigh less, but they’re not carrying less heavy backpacks
 
-6. 
+6. What proportion of students report back pain?
 
 ```{r}
 backpack_bp <- backpack %>% 
@@ -84,9 +86,9 @@ ggplot(backpack_bp)+
 
 ```
 
-Description: Just under half of the students report back problems.
+Description: Approximately 1/3 of the students report back problems.
 
-7.
+7. Is this proportion different between men and women?
 
 ```{r}
 ggplot(backpack_bp)+
@@ -99,11 +101,30 @@ ggplot(backpack_bp)+
        y = "number of students\n")
 ```
 
-Description: Majority of students reporting back pain are females.
+Description: Majority of students reporting back pain are females. 
 
-8.
+Exceptions:
+
+1. Does reported backpain differ across the year groups? Ignore year 0 in your data.
+```{r}
+backpack %>% 
+  filter(year > 0) %>% 
+  ggplot()+
+  aes(x = year, group = back_problems, fill = back_problems) %>% 
+  geom_histogram()+
+  facet_wrap(~back_problems)+
+  theme(legend.position = "none")
+  
+```
+Year 3 and 4 report increase in backpack pain. There is a significant difference between year 2 and 3 in reporting back pain by students.
+
+2. Is there a difference between how heavy the bags are in different years?
 
 ```{r}
-
+ggplot(backpack)+
+  geom_bar(aes(x = backpack_weight)) + 
+  facet_wrap(~ year, ncol = 4) + 
+  xlab("backpack weights")
 ```
 
+Here it might be tempting to say years 3 and 4 have more people carrying heavy bags, but it actually seems more like it is the data that’s not great in the last years and we need to collect more data.
