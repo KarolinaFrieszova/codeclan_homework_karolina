@@ -19,12 +19,18 @@ Since 2013 bicycle sharing scheme 'CitiBike' is available in New York City. Ther
 
 Our dataset is a sample from NYC Citi Bike usage of 10 bikes throughout 2018. The data includes event data on each trip, including the trip's start and end times and locations. The customer's gender, birth year and bike usage type.
 
-There are two trip types, a 'Customer' and 'Subscriber'. Where the customer type represents either a day or 3-day pass, and a subscriber represents an annual subscription.
+There are two trip types, a 'Customer' and a 'Subscriber'. Where the customer type represents either a day or 3-day pass, and a subscriber represents an annual subscription.
 
 ## Data sourse
 
-Data were obtained from [CitiBike](https://www.citibikenyc.com/system-data) website has a vast amount of data available regarding bike hire usage as well as sales of memberships and short-term passes.
+Data were obtained from [CitiBike](https://www.citibikenyc.com/system-data) website which has a vast amount of open data available regarding bike hire usage as well as sales of memberships and short-term passes.
 
+## Analysis questions
+
+In report we consider the pattern of bike hires over time and how bike hire patterns differ between bike rider demographics of trip type. 
+Secondly, we look at the geographical spread of the start points of bike hires.
+
+## Results
 ```{r}
 # libraries
 
@@ -47,12 +53,15 @@ nyc_bikes_ts <- nyc_bikes %>%
          quarter = quarter(start_time))
 ```
 
-- The monthly histogram illustrates the pattern in how bike hire in New York City was distributed over the year 2018.
-- It is clear that our ten sample bikes were  mainly hired by annual subscribers. 
-- There was a spike in bike hire in July and August and contrary to that February was the month with lowest amount of rentals. 
+##### Monthly bike hires by trip type
+
+- The histogram illustrates the pattern in how bike hire in New York City was distributed over the year 2018.
+- The x axis represents months of 2018 and y axis displays the frequency the bikes were used by type, depending if the trip was made with annual membership card or with short-term pass.
+- There was a spike in bike hire usage in July and August and contrary to that February was the month with lowest amount of trips. 
 - The graph illustrates that bikes were used less frequently from November to March, and more frequently from April to October. 
-- Bikes weren't much used for short term hires in January, February and December. 
-- The strongest month for short term hires type was July and for annual hire type it was August.
+- These bikes weren't much used for short term hires in January, February and December. 
+- The strongest month for short term hire usage was July and for the membership hire usage it was August.
+- It is clear that our ten sample bikes were  mainly hired by annual subscribers. 
 
 ```{r}
 nyc_bikes_ts %>% 
@@ -70,21 +79,14 @@ nyc_bikes_ts %>%
                                "Subscriber" = "#1b9e77"))
 ```
 
-```{r}
-nyc_bikes_ts %>% 
-  index_by(quarter) %>% 
-  group_by(type) %>% 
-  ggplot()+
-  aes(x = quarter, group = type, fill = type)+
-  geom_histogram(stat="count", colour = "black")+
-  theme_bw()+
-  labs(title = "Quarterly bike hires by trip type\n",
-       x = "\nQuarter",
-       y = "Frequency\n",
-       fill = "Trip type")+
-  scale_fill_manual(values = c("Customer" = "#d95f02",
-                               "Subscriber" = "#1b9e77"))
-```
+##### Weekly bike hires by trip type
+
+- The line graph illustrates the pattern in how the bike hire usage was distributed over the week days throughout the year of 2018. 
+- The x axis represents the days of the week and the y axis represents the frequency of bike usage for again our two trip types of memberships and short-term passes.
+- The graph displays that there was highest usage of bicycles on Tuesdays.
+- The bicycles were mainly used by subscribers from Monday to Friday.
+- Whereas bicycles usage by short term hires increased over the weekend in comparison to the working week. 
+- The line graph also confirms that the ten bikes were more frequently used by the users with annual pass.
 
 ```{r}
 nyc_bikes_ts %>% 
@@ -103,15 +105,46 @@ nyc_bikes_ts %>%
                                "Subscriber" = "#1b9e77"))
 ```
 
+##### The geographical spread of the start points of bike hires
 
+- The ten sample bicycles were used for trips from Jersey City. 
+- By zooming out, we see that from stations crosses Jersey City these ten bikes were picked 4268 times over the year of 2018.
+- By zooming in, we can see the stations and how many times the bikes where picked from which station. 
+- Our bicycle start points were relatively concentrated baring in mind the spread of New Your City.
+```{r}
+# turn columns to numeric and remove NA values
+nyc_bikes_clean <- nyc_bikes %>%
+  select(start_lat, start_long, type) %>% 
+  mutate_at(vars(start_lat, start_long), as.numeric) %>%
+  filter(!is.na(start_long)) %>% 
+  filter(!is.na(start_lat)) %>% 
+  filter(!is.na(type))
+
+# create leaflet map
+leaflet(nyc_bikes_clean) %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~start_long,
+                   lat = ~start_lat,
+                   clusterOptions = markerClusterOptions())
+```
 
 
 
 ## Conclusion
 
-What is the pattern of bike hires over time (e.g. within a year, month, week, or day)?
-Do bike hire patterns differ between bike rider demographics? (e.g. gender, type of trip, age)
-provide actionable insights to the busines - t relates to key performance indicators (in this case the overall objective is to increase bike hires)
+To conclude, graphs indicate that bike hire is fairly popular annual transportation choice.
+The first graph indicate that bikes were used less frequently over the winter months, which can be due to the weather conditions.
+Therefore, I would suggest 'CitiBike' to schedule any annual repair for February as bikes were utilised least frequently. 
+
+There is a significant pattern difference between bike rider by the demographics of trip type. I would suggest to explore options of increasing sales of the short-term passes.
+
+Our bicycle start points were relatively concentrated baring in mind the spread of New Your City.
 
 
-1. This can indicate that bike sharing is popular type of transportation between local New Yorkers. 
+
+
+
+
+
+
+
