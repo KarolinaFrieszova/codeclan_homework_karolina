@@ -27,8 +27,9 @@ Data were obtained from [CitiBike](https://www.citibikenyc.com/system-data) webs
 
 ## Analysis questions
 
-In report we consider the pattern of bike hires over time and how bike hire patterns differ between bike rider demographics of trip type. 
-Secondly, we look at the geographical spread of the start points of bike hires.
+In report we consider the pattern of bike hires over time.
+How bike hire patterns differ between bike rider demographics of trip type? 
+And, we look at the geographical spread of the start points of bike hires.
 
 ## Results
 ```{r}
@@ -109,7 +110,7 @@ nyc_bikes_ts %>%
 
 - The ten sample bicycles were used for trips from Jersey City. 
 - By zooming out, we see that from stations crosses Jersey City these ten bikes were picked 4268 times over the year of 2018.
-- By zooming in, we can see the stations and how many times the bikes where picked from which station. 
+- By zooming in, we can see the stations and how many times the bikes where picked from each station. 
 - Our bicycle start points were relatively concentrated baring in mind the spread of New Your City.
 ```{r}
 # turn columns to numeric and remove NA values
@@ -132,8 +133,9 @@ leaflet(nyc_bikes_clean) %>%
 
 ## Conclusion
 
-To conclude, graphs indicate that bike hire is fairly popular annual transportation choice.
-The first graph indicate that bikes were used less frequently over the winter months, which can be due to the weather conditions.
+To conclude, the graphs indicate that bike hire is fairly popular annual transportation choice.
+
+The first graph shows that bikes were used less frequently over the winter months, which can be due to the weather conditions.
 Therefore, I would suggest 'CitiBike' to schedule any annual repair for February as bikes were utilised least frequently. 
 
 There is a significant pattern difference between bike rider by the demographics of trip type. I would suggest to explore options of increasing sales of the short-term passes.
