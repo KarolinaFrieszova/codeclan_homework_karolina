@@ -97,8 +97,12 @@ for (sample_num in 1:1000){
 
 
 ```{r}
-results %>% 
-  mutate(popn_param_in_ci = if_else(lower > 161135.6 & upper < 204645.6, TRUE, FALSE))
+#results %>% 
+  #mutate(popn_param_in_ci = if_else(lower > 161135.6 & upper < 204645.6, TRUE, FALSE))
 ```
 
+```{r}
+results %>%
+  summarise(proportion_CI_containing_popn_param = mean(popn_param_in_ci))
+```
 
