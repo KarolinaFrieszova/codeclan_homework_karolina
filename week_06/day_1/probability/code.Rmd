@@ -14,16 +14,18 @@ titanic <- read_csv("data/titanic.csv")
 ```
 
 ```{r}
-unique(titanic$class)
-```
+# get initial counts of class
 
-```{r}
-names(titanic)
+titanic %>%
+  count(class)
 ```
 
 ```{r}
 titanic <- titanic %>% 
   mutate(crew = if_else(class %in% c("1st", "2nd", "3rd"), FALSE, TRUE))
+
+titanic %>%
+  count(crew)
 ```
 
 prob(survived | crew)
@@ -39,6 +41,10 @@ titanic %>%
 ```
 ```{r}
 211/890
+
+titanic %>%
+  filter(crew) %>%
+  summarise(prob = sum(survived == "yes") / n())
 ```
 
 The proportion of crew that survived was 24%.
@@ -57,9 +63,15 @@ titanic %>%
 ```
 ```{r}
 500/1317
+
+titanic %>%
+  filter(!crew) %>%
+  summarise(prob = sum(survived == "yes") / n())
 ```
 
 The proportion of passengers that survived was 38%.
+
+So passengers were 1.6 times more likely to have survived the disaster than crew.
 
 1. If I roll a six-sided dice once, what is the probability of getting a number less than 5?
 
@@ -67,13 +79,16 @@ The proportion of passengers that survived was 38%.
 rolldie(1) %>% 
   filter(X1 < 5)
 
-4/6
+4/6 # 2/3
 ```
 
-2. How many outcomes are there in the sample space of an experiment in which we toss three dice?
-- 216 possible outcomes if we toss three dice
+2. How many outcomes are there in the sample space of an experiment in which we roll three dice?
+
+- 216 possible outcomes if we roll three dice
 ```{r}
-rolldie(3)
+6*6*6
+rolldie(3) %>% 
+  nrow()
 ```
 
 3. 
@@ -90,36 +105,90 @@ what is the probability of this event?
 34/1296
 ```
 
+# alternative way
+
+```{r}
+S <- rolldie(4)
+
+# add total random variable
+S <- S %>%
+  mutate(total = rowSums(.))
+
+# the total of the four dice equals 5, 6 or 7)
+S_total_between_5_7 <- S %>%
+  filter(total %in% c(5, 6, 7))
+
+nrow(S_total_between_5_7)
+
+# probability of this event
+prob <-nrow(S_total_between_5_7) / nrow(S)
+prob
+```
+
 iii.
 All assumptions are fair.
+We assume all outcomes in the sample space are equally likely!
 
-4. 
+4. Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
 ```{r}
 permutations(
   n = 5,
-  r = 5
-) %>% 
+  r = 5) %>% 
   as_tibble() %>% 
   nrow()
-```
-```{r}
+
 1/120
 ```
 
-5. 
+# alternative way
+
+```{r}
+# number of ordered arrangements:
+num_outcomes <- factorial(5)
+
+# only one of these is correctly ordered:
+prob_perfect_order <- 1/num_outcomes
+prob_perfect_order
+```
+
+5. I roll six dice:
 i. what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right? - 1/46656
 
 ```{r}
 rolldie(6)
 1/46656
 ```
+# alternative ways
+
+```{r}
+S <- rolldie(6)
+
+prob <- 1 / nrow(S)
+prob
+
+# or
+S_in_order <- S %>%
+  filter(isin(., c(6, 5, 4, 3, 2, 1), ordered = TRUE))
+prob <- nrow(S_in_order) / nrow(S)
+prob
+
+# or
+prob <- 1 / 6^6
+prob
+```
 
 
 ii. what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
 ```{r}
-rolldie(6) %>% 
+S <- rolldie(6)
+
+S_contains_654321 <- rolldie(6) %>% 
   filter(isin(., c(1,2,3,4,5,6), ordered = FALSE)) %>% 
   nrow()
+
+prob <- nrow(S_contains_654321) / nrow(S)
+prob
 ```
 ```{r}
 factorial(6)
@@ -128,13 +197,25 @@ factorial(6)
 6. If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades?
 
 ```{r}
-cards() %>% 
-  mutate(colour = if_else(suit %in% c("Club", "Spade"), "black", "red")) %>% 
-  filter(suit == "Spade" & colour == "black")
+S <- cards(jokers = FALSE)
+
+S <- S %>%
+  mutate(black_card = suit == "Club" | suit == "Spade")
+
+S_spades_and_black <- S %>%
+  filter(black_card == TRUE & suit == "Spade")
+
+prob_spades_and_black <- nrow(S_spades_and_black) / nrow(S)
+
+S_black <- S %>%
+  filter(black_card == TRUE)
+
+prob_black <- nrow(S_black) / nrow(S)
+
+prob_spades_given_black <- prob_spades_and_black / prob_black
+prob_spades_given_black
 ```
-```{r}
-13/52 = 1/4
-```
+
 
 7. Eight patients: Alice, Bob, Carmen, Dinesh, Ella, Fergus, Gianna and Henry are waiting to see a doctor, but only five appointment slots are left today.
 
@@ -191,13 +272,13 @@ permutations(
 1200/6720
 ```
 
-8. Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+iv. Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
 
 ```{r}
 240
 ```
 
-9.  If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
+8.  If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
 
 ```{r}
 combinations(
@@ -208,4 +289,31 @@ combinations(
   nrow()
 ```
 
-10. 
+9. 
+```{r}
+combinations(
+  n = 7,
+  r = 4
+) %>% 
+  as_tibble() %>% 
+  nrow()
+```
+
+```{r}
+35*8
+```
+
+# alternative way
+
+```{r}
+# step 1: choose a captain. We have 8 choices
+num_captains <- 8
+
+# step 2: for each choice of captain, choose 4 remaining team members from 7 
+teams <- combinations(n = 7, r = 4, v = 1:7, repeats.allowed = FALSE)
+num_team_combinations <- nrow(teams)
+
+# combinations
+num_captains * num_team_combinations
+```
+
