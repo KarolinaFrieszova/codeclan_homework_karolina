@@ -4,10 +4,14 @@ output: html_notebook
 ---
 
 ```{r}
+# library
+
 library(tidyverse)
 ```
 
 ```{r}
+# data
+
 revenue_breakdown <- CodeClanData::qb_revenue_breakdown
 monthly_sales <- CodeClanData::qb_monthly_sales
 competitors <- CodeClanData::qb_competitors
@@ -19,8 +23,8 @@ device_data <- CodeClanData::qb_device_data
 ```{r}
 ggplot(revenue_breakdown)+
   aes(x = Year, y = Revenue, group = Product, fill = Product)+
-  geom_bar(stat = "identity")+
-  labs(title = "Sources of revenue for two years\n",
+  geom_bar(stat = "identity")+ # geom_col()
+  labs(title = "Sources of revenue across two years\n",
        x = "\nYear",
        y = "Revenue\n")+
   theme_bw(base_size = 12)+
@@ -33,12 +37,12 @@ ggplot(revenue_breakdown)+
 
 ```{r}
 kwikbit_sales <- monthly_sales %>% 
-  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
-  mutate(Cashflow = recode(Cashflow, "Kwikbit Unit 1 Sales" = "KwikBit Unit 1"))
+  filter(Cashflow == "Kwikbit Unit 1 Sales") #%>% 
+  #mutate(Cashflow = recode(Cashflow, "Kwikbit Unit 1 Sales" = "KwikBit Unit 1"))
 
 ggplot(kwikbit_sales)+
   aes(x = Date, y = Amount)+
-  geom_line()+
+  geom_line(color = "#E89FE9")+
   labs(title = "Monthly sales for flagship product",
        x = "Period")+
   theme_bw(base_size = 12)
@@ -52,6 +56,7 @@ revenue_cost <- monthly_sales %>%
 ggplot(revenue_cost)+
   aes(x = Date, y = Amount, colour = Cashflow)+
   geom_line()+
+  scale_y_continuous(limits = c(1500, 3000))+
   labs(title = "Monthly revenue and costs over the last year",
        x = "Period")+
   theme_bw(base_size = 12)+
@@ -80,11 +85,11 @@ ggplot(competitors1)+
 5.
 
 ```{r}
-ggplot(competitors1)+
+ggplot(competitors)+
   aes(x = Year, y = Revenue, group = Company, colour = Company)+
   geom_line()+
   geom_point()+
-  labs(title = "Sales of competitors over the past 5 years\n",
+  labs(title = "Sales of four competitors over the past 5 years\n",
        x = "\nYear",
        y = "Revenue (million units)\n")+
   theme_bw(base_size = 12)+
@@ -95,12 +100,20 @@ ggplot(competitors1)+
 ```
 
 6.
-# needs to be redone
+
 ```{r}
-ggplot(device_data)+
-  aes(x = hours, y = counts, group = comp)+
-  geom_line()+
-  theme_bw(base_size = 12)
+device_data <- 
+mutate(device_data, hour = hours + (mins/60))
+
+ggplot(device_data) +
+  aes(x = hour, y = counts, colour = device) +
+  geom_line(show.legend = FALSE) + 
+  scale_x_continuous("Time (hours)") +
+  scale_y_continuous("Steps") +
+  facet_grid(id ~ device) +
+  scale_colour_manual(values = c("#E89FE9", "#B6A7B5", "#50434F", "#F9A472")) +
+  theme_bw(base_size = 12)+
+  ggtitle("Our device vs. competitors for 5 individuals")
   
 ```
 
