@@ -1,0 +1,137 @@
+---
+title: "Cancer Rates in NHS Borders"
+output: html_notebook
+---
+
+
+```{r}
+# packages required
+library(tidyverse)
+library(janitor)
+library(readxl)
+
+# data on geography codes and labels
+geography_codes <- read_csv("data/geography_codes.csv") %>% 
+  clean_names()
+
+# cancer incidents by Health Board
+incidence_by_health_board <- read_csv("data/incidence_by_health_board.csv") %>% 
+  clean_names()
+```
+
+```{r}
+# join two tables and remove variables that aren't required
+cancer_rates <- left_join(incidence_by_health_board, geography_codes, by = "hb") %>% 
+  filter(hb_name == "NHS Borders") %>% 
+  select(-c(hb_date_enacted, hb_date_archived, country))
+```
+
+Graph to visualise all registered cancer incidence in NHS Boarders, 1994 to 2018
+```{r}
+cancer_rates %>% 
+  group_by(year) %>% 
+  filter(cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  ggplot()+
+  aes(x = year, y = incidences_all_ages)+
+  geom_line(size = 1.5, color = "#FF9999")+
+  labs(title = "All registered cancer incidences in NHS Borders, 1994 to 2018\n",
+       x = "\nYear",
+       y = "Incidence\n")+
+  theme_linedraw()+
+  scale_x_continuous(breaks = c(1994, 1998, 2002, 2006, 2010, 2014, 2018))
+```
+
+Total number of most common new cancer registrations in NHS Borders, 2008 to 2018
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>%
+  group_by(year, cancer_site) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  filter(incidences_all_ages > 50) %>% 
+  ggplot()+
+  aes(x = year, y = incidences_all_ages, fill = cancer_site)+
+  geom_point(size = 3, shape = 21)+
+  scale_fill_brewer(palette = "Set1")+
+  labs(fill = "Diagnosed cancer",
+       title = "Most common new registered incidences of cancer by year, 2008 to 2018",
+       subtitle = "Exceeding 50 incidence per year\n",
+       x = "Year",
+       y = "Incidence")+
+  theme_linedraw()+
+  scale_x_continuous(breaks = c(2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018))
+
+```
+
+Most common incidences of cancer over ten year period, 2008 to 2018
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  group_by(cancer_site) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  filter(incidences_all_ages > 50) %>% 
+  ggplot()+
+  aes(reorder(x = cancer_site, incidences_all_ages), y = incidences_all_ages)+
+  geom_col(fill = "#FF9999")+
+  coord_flip()+
+  labs(title = "Most common incidences of cancer by cancer site",
+       subtitle = "Exceeding 50 incidences per year\n",
+       x = "Cancer site",
+       y = "Incidence")+
+  theme_linedraw()
+```
+
+
+Sum of all new cancer registrations by cancer site between 2008 to 2018 in NHS Borders
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  group_by(cancer_site) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  filter(incidences_all_ages <= 50) %>% 
+  #distinct(cancer_site) %>% 
+  ggplot()+
+  aes(reorder(x = cancer_site, incidences_all_ages), y = incidences_all_ages)+
+  geom_col(fill = "#FF9999")+
+  coord_flip()+
+  labs(y = "Incidences",
+       x = "Cancer site",
+       title = "Cancer incidences by cancer site (2008-2018)",
+       subtitle = "with 50 and less registered incidences per year")+
+  theme_bw()
+
+```
+
+Annual difference in instances of all ages and sex.
+```{r}
+cancer_rates %>% 
+  group_by(cancer_site) %>% 
+  filter(cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  mutate(volume = 
+           incidences_all_ages - lag(incidences_all_ages, default = incidences_all_ages[1])) %>% 
+  arrange(desc(volume)) %>% 
+  select(volume, year)
+```
+
+Number of instances of particular cancer type over ten years
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  filter(cancer_site == "Malignant melanoma of the skin") %>% 
+  filter(sex == "All") %>% 
+  summarise(sum(incidences_all_ages))
+```
+Amount of registered cancer sites in ten year period
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  distinct(cancer_site)
+  
+  
+```
+
