@@ -33,7 +33,7 @@ According to the information, the number of incidences of particular cancer site
 
 #### 3) Most common incidences of cancer over ten year period, 2008 to 2018
 
-This flipped bar graph displays the most common reported incidences of cancer per diagnosed cancer site over ten year period. The graph is a summary of all the cancer sites which are exceeding 50 incidences per year.
+This flipped bar graph displays the most commonly reported incidences of cancer per diagnosed cancer site over ten year period. The graph is a summary of all the cancer sites which are exceeding 50 incidences per year.
 
 The cancer site with the highest number of new registrations was 'Non-melanoma skin cancer' with 3191 registrations.
 The second most commonly diagnosed cancer was 'Basal cell carcinoma of the skin' with 2113 registrations. 
@@ -55,9 +55,9 @@ The number of cancer incidences rose over the past 24 years in NHS Borders.
 
 According to the information, the number of incidences of particular cancer site does not fluctuate significantly from year to year but rather flactuate slightly whithin certain levels. This may to an extend help when making predictions, however, further analysis are required.
 
-It is clear that the most commonly diagnosed cancer types in the NHS Borders over ten years was 'Non-melanoma skin cancer' and 'Basal cell carcinoma of the skin'. 
+It is clear that the most commonly diagnosed cancer types in the NHS Borders over ten years were 'Non-melanoma skin cancer' and 'Basal cell carcinoma of the skin'. 
 In addition, four cancer sites had each over 1000 cancer incedences registered. Speaking of: 'Breast', 'Colorectal', 'Trachea, bronchus and lung', and 'Squamous cell carcinoma of the skin'.
 
 It is highlighted that a significant portion of diagnosed cancer sites has a lower number of registrations per year.
 
-According to the ten-year data, there were 51 types of diagnosed cancer incidences in NHS Borders. Seven of these were had each over 800 instances and 44 had each under 400 instances. 
+According to the ten-year data, there were 41 types of diagnosed cancer incidences in NHS Borders. Seven of these were had each over 800 instances and 34 had each under 400 instances. 

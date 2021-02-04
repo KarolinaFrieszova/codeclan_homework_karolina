@@ -135,3 +135,29 @@ cancer_rates %>%
   
 ```
 
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  distinct(cancer_site)
+```
+
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  filter(incidences_all_ages <= 50) %>% 
+  distinct(cancer_site)
+```
+
+Check up code on above calculations
+```{r}
+cancer_rates %>% 
+  filter(year %in% 2008:2018) %>% 
+  filter(!cancer_site == "All cancer types") %>% 
+  filter(sex == "All") %>% 
+  group_by(cancer_site) %>% 
+  summarise(total = sum(incidences_all_ages)) %>% 
+  arrange(desc(total))
+```
+
