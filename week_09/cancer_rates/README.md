@@ -33,9 +33,9 @@ According to the information, the number of incidences of particular cancer site
 
 #### 3) Most common incidences of cancer over ten year period, 2008 to 2018
 
-This flipped bar graph displays the most common reported incidences of cancer per diagnosed cancer site. The graph is a summary of all the cancer sites which are exceeding 50 incidences per year.
+This flipped bar graph displays the most common reported incidences of cancer per diagnosed cancer site over ten year period. The graph is a summary of all the cancer sites which are exceeding 50 incidences per year.
 
-The cancer site with the highest number of new registrations over the ten years was 'Non-melanoma skin cancer' with 3191 registrations.
+The cancer site with the highest number of new registrations was 'Non-melanoma skin cancer' with 3191 registrations.
 The second most commonly diagnosed cancer was 'Basal cell carcinoma of the skin' with 2113 registrations. 
 Further, 'Breast', 'Colorectal', 'Trachea, bronchus and lung', and 'Squamous cell carcinoma of the skin' had each over 1000 new registions in the NHS Borders.
 
@@ -43,7 +43,7 @@ Further, 'Breast', 'Colorectal', 'Trachea, bronchus and lung', and 'Squamous cel
 
 #### 4) Sum of all new cancer registrations by the diagnosed cancer site between 2008 to 2018 in NHS Borders. It covers only diagnosed cancer sites with 50 and fewer incidences per year.
 
-The bar graph displays cancer sites with 50 and fewer registered incidences per year. The graph displays count of the incidences over the ten years per specific cancer site.
+The bar graph displays cancer sites with 50 and fewer registered incidences per year. The graph displays summary of the incidences over the ten years per specific cancer site.
 
 This graph highlights that a significant portion of diagnosed cancer sites has a lower number of registrations per year.
 
@@ -51,13 +51,13 @@ This graph highlights that a significant portion of diagnosed cancer sites has a
 
 ## Conclusion
 
-Clearly, as illustrated in the first graph, the number of cancer incidences rose over the past 24 years in NHS Borders.
+The number of cancer incidences rose over the past 24 years in NHS Borders.
 
 According to the information, the number of incidences of particular cancer site does not fluctuate significantly from year to year but rather flactuate slightly whithin certain levels. This may to an extend help when making predictions, however, further analysis are required.
 
-It is obvious from the second and the third graph that the most commonly diagnosed cancer types in the NHS Borders over ten year period, 2008 to 2018, was 'Non-melanoma skin cancer' and 'Basal cell carcinoma of the skin'. 
+It is clear that the most commonly diagnosed cancer types in the NHS Borders over ten years was 'Non-melanoma skin cancer' and 'Basal cell carcinoma of the skin'. 
 In addition, four cancer sites had each over 1000 cancer incedences registered. Speaking of: 'Breast', 'Colorectal', 'Trachea, bronchus and lung', and 'Squamous cell carcinoma of the skin'.
 
-The fourth graph highlights that a significant portion of diagnosed cancer sites has a lower number of registrations per year.
+It is highlighted that a significant portion of diagnosed cancer sites has a lower number of registrations per year.
 
 According to the ten-year data, there were 51 types of diagnosed cancer incidences in NHS Borders. Seven of these were had each over 800 instances and 44 had each under 400 instances. 
