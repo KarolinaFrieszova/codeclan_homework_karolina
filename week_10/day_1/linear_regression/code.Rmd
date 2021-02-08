@@ -1,0 +1,48 @@
+---
+title: "Simple Linear Regression"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+
+project_management <- read_csv("data/project_management.csv")
+```
+
+estimated_length - contains the estimated length of a building job in days
+actual_length - contains the actual recorded length of the job in days
+
+We are interested in determining the accuracy of the job estimations made by the company using simple linear regression,
+
+actual_length as the dependent variable - y
+estimated_length as the independent variable - x
+
+1. Plot the data, taking estimated_length as the independent variable and actual_length as the dependent variable.
+
+```{r}
+project_management %>% 
+  ggplot(aes(x = estimated_length, y = actual_length))+
+  geom_point()
+```
+
+2. Calculate the correlation coefficient of estimated_length and actual_length and interpret the value you obtain.
+```{r}
+project_management %>% 
+  summarise(cor(estimated_length, actual_length))
+```
+
+Correlation coefficient is very strong.
+
+3. Perform a simple linear regression using actual_length as the dependent variable, and estimated_length as the independent variable. Save the model object to a variable.
+```{r}
+model <- lm(formula = actual_length ~ estimated_length, data = project_management)
+
+model
+```
+
+4. Interpret the regression coefficient of estimated_length (i.e. slope, gradient) you obtain from the model. How do you interpret the r2 value reported by the model?
+
+```{r}
+
+```
+
