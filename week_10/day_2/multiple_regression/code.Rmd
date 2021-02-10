@@ -1,0 +1,63 @@
+---
+title: "Multiple Regression"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(fastDummies)
+```
+
+```{r}
+diamonds <- read_csv("data/diamonds.csv") %>% 
+  clean_names()
+```
+
+2. We expect the carat of the diamonds to be strong correlated with the physical dimensions x, y and z. Use ggpairs() to investigate correlations between these four variables.
+
+```{r}
+diamonds_dimentions <- diamonds %>% 
+  select(carat, x, y, z)
+ggpairs(diamonds_dimentions)
+```
+
+4. We are interested in developing a regression model for the price of a diamond in terms of the possible predictor variables in the dataset.
+
+```{r}
+diamonds_price <- diamonds %>% 
+  select(-c(x1, x, y, z))
+
+ggpairs(diamonds_price)
+```
+```{r}
+diamonds_price %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+diamonds_qualitative <- diamonds_price %>% 
+  select(-c(table, depth))
+
+
+ggpairs(diamonds_qualitative)
+
+```
+
+```{r}
+diamonds_cut_dummy <- diamonds_qualitative %>%
+  fastDummies::dummy_cols(select_columns = "cut", remove_first_dummy = TRUE) 
+
+diamonds_cut_dummy
+
+diamonds_color_dummy <- diamonds_qualitative %>%
+  fastDummies::dummy_cols(select_columns = "color", remove_first_dummy = TRUE) 
+
+diamonds_color_dummy
+
+diamonds_clarity_dummy <- diamonds_qualitative %>%
+  fastDummies::dummy_cols(select_columns = "clarity", remove_first_dummy = TRUE) 
+
+diamonds_clarity_dummy
+```
