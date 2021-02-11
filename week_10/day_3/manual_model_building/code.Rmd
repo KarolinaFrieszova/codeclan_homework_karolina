@@ -1,0 +1,110 @@
+---
+title: "Manual Model Building"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+```
+
+```{r}
+kc_housing <- read_csv("data/kc_house_data.csv")
+```
+
+# Tidy Data
+
+```{r}
+# removing some variables
+kc_housing <- kc_housing %>% 
+  select(-c("date", "id", "sqft_living15", "sqft_lot15", "zipcode"))
+```
+
+```{r}
+# converted yr_renovated into a renovated logical variable, indicating whether the property had ever been renovated or no
+# converted grade into a above average construction conditions and below
+kc_housing <- kc_housing %>% 
+  mutate(renovated = ifelse(yr_renovated == 0, 0, 1),
+         above_avg_constraction = ifelse(grade %in% c(1:6), 0, 1)) %>% 
+  select(-c(yr_renovated, grade))
+```
+
+```{r}
+# remove variables that lead to an alias
+kc_housing <- kc_housing %>% 
+  select(-c(sqft_basement, sqft_above))
+
+alias(lm(price ~ ., data = kc_housing))
+
+# check for any missing values
+summary(kc_housing)
+```
+
+# Systematically build a regression model 
+
+```{r}
+kc_housing_numeric <- kc_housing %>%
+  select(price, bedrooms, bathrooms, sqft_living, sqft_lot, floors, yr_built, lat, long)
+
+kc_housing_nonnumeric <- kc_housing %>%
+  select(price, waterfront, view, condition, renovated, above_avg_constraction)
+
+ggpairs(kc_housing_numeric)
+```
+
+```{r}
+ggpairs(kc_housing_nonnumeric)
+```
+price and sqft_living
+```{r}
+kc_housing %>%
+  ggplot(aes(x = sqft_living, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+There seems to be a linear relationship: as the sqft_living goes up, the price goes up
+
+```{r}
+# Goodness-of-fit metrics
+
+model_p_living <- lm(price ~ sqft_living, data = kc_housing)
+
+autoplot(model_p_living)
+```
+1. residuals are randomly scattered around zero
+2. most of the points are on the straight line
+3. the line doesn't stay constant on a positive value - fail
+
+price and bathrooms
+```{r}
+kc_housing %>%
+  ggplot(aes(x = bathrooms, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+There seems to be a linear relationship: more bathrooms, the price goes up
+
+```{r}
+# Goodness-of-fit metrics
+
+model_p_bathrooms <- lm(price ~ bathrooms, data = kc_housing)
+
+autoplot(model_p_bathrooms)
+```
+Price and latitude
+```{r}
+kc_housing %>%
+  ggplot(aes(x = lat, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+model_p_lat<- lm(price ~ lat, data = kc_housing)
+
+autoplot(model_p_lat)
+
+summary(model_p_lat)
+```
+
