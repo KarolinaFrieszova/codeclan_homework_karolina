@@ -1,0 +1,92 @@
+---
+title: "Homework Quiz"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../../styles.css
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+- over-fitting
+
+2. If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+AIC score of 33,559 
+
+3. I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+r-squared: 0.44, adjusted r-squared: 0.43
+
+4. I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+RMSE error on test set: 10.4
+
+5. How does k-fold validation work?
+
+For 10-fold cross validation we trained on 9 folds and tested on 1.
+
+6. What is a validation set? When do you need one?
+
+If you are carrying out a complex model building process, particularly if you are comparing several types of models, then you may want another hold out set: the validation set. This is a set of data used neither in training or to compare models against each other. It should give you a final estimate of the expected performance of the model. It should be used only once you are finished selecting the model.
+
+7. Describe how backwards selection works.
+
+- Start with the model containing all possible predictors (the so-called ‘full’ model)
+- At each step, check all predictors in the model, and find the one that lowers r2 the least when it is removed
+- Remove this predictor from the model
+- Keep note of the number of predictors in the model and the current model formula
+- Go on to remove another predictor, or stop if all predictors in the model have been removed
+
+8. Describe how best subset selection works.
+
+- At each size of model, search all possible combinations of predictors for the best model (i.e. the model with highest r2) of that size.
+
+- The effort of this algorithm increases exponentially with the number of predictors
+
+9. It is estimated on 5% of model projects end up being deployed. What actions can you take to maximise the likelihood of your model being deployed?
+
+As a minimum the following should be recorded:
+
+- The business context of the model
+- Model design decisions and rationale including choice of algorithm, build population and target variable.
+- Modelling decisions including a full audit trail of variable choices, including any exclusions.
+- Final model explainability
+- Model validation on a recent dataset
+- Implementation instructions including any restrictions
+
+10. What metric could you use to confirm that the recent population is similar to the development population?
+
+Population Stability Index (PSI) and Characteristic Stability Index (CSI)
+
+11. How is the Population Stability Index defined? What does this mean in words?
+
+How the current scoring is compared to the predicted probability from training data set.
+
+12. Above what PSI value might we need to start to consider rebuilding or recalibrating the model
+
+This may not be clear at the design stage, but will need to be incorporated before model implementation.
+
+13. What are the common errors that can crop up when implementing a model?
+
+
+14. After performance monitoring, if we find that the discrimination is still satisfactory but the accuracy has deteriorated, what is the recommended action?
+
+
+15. Why is it important to have a unique model identifier for each model?
+
+The unique identifier is important because it designates which instance of an entity is being dealt with. Identifier selection is critical because it is also used to model relationships. If an identifier for an entity doesn't meet one of the above rules, it could affect the whole data model.
+
+16. Why is it important to document the modelling rationale and approach?
+
+when designing or implementing models, you have the power to do great harm if designed or implemented incorrectly: your model might lead an organisation to make a bad business decision, or it may have bias which affects individuals.
+
+

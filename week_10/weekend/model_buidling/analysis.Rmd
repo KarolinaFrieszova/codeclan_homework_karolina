@@ -1,0 +1,138 @@
+---
+title: "Model Building"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(ggfortify)
+library(modelr)
+library(relaimpo)
+```
+
+```{r}
+avocado_raw <- read_csv("data/avocado.csv")
+```
+
+# Data Cleaning
+
+- check missing values
+- change variable class if required
+- check redundant predictors
+
+```{r}
+avocado <- avocado_raw %>% 
+  clean_names() %>% 
+  mutate(month = as_factor(format(date, "%m"))) %>% 
+  select(-date) %>% 
+  mutate(year = as_factor(year)) %>% 
+  mutate(organic = ifelse(type == "organic", TRUE, FALSE)) %>% 
+  select(-c(type, region, x1, small_bags, large_bags, x_large_bags)) 
+```
+
+
+```{r}
+#summary(avocado)
+
+alias(lm(average_price ~ ., data = avocado))
+```
+
+```{r}
+avocado_numeric <- avocado %>%
+  select_if(is.numeric)
+
+avocado_nonnumeric <- avocado %>%
+  select_if(function(x) !is.numeric(x))
+
+avocado_nonnumeric$average_price <- avocado$average_price
+
+ggpairs(avocado_numeric)
+
+```
+
+```{r}
+ggpairs(avocado_nonnumeric)
+```
+Looking at the graphs I chose to compare models for features organic, month, x 4046, total volume, total bags
+```{r}
+model_organic <- lm(average_price ~ organic, data = avocado)
+summary(model_organic)
+autoplot(model_organic)
+```
+
+# Second predictor
+
+```{r}
+avocado_residuals <- avocado %>%
+  add_residuals(model_organic) %>%
+  select(-c("average_price", "organic"))
+
+ggpairs(avocado_residuals)
+
+```
+
+Comparining month and year
+```{r}
+model_month <- lm(average_price ~ organic + month, data = avocado)
+summary(model_month)
+autoplot(model_month)
+
+anova(model_organic, model_month)
+```
+
+# Third predictor
+
+```{r}
+avocado_residuals <- avocado %>%
+  add_residuals(model_month) %>%
+  select(-c("average_price", "organic", "month"))
+
+ggpairs(avocado_residuals)
+```
+
+Looking at total_volume and year
+```{r}
+model_year <- lm(average_price ~ organic + month + year, data = avocado)
+summary(model_year)
+```
+# Fourth predictor
+
+```{r}
+avocado_residuals <- avocado %>%
+  add_residuals(model_year) %>%
+  select(-c("average_price", "organic", "month", "year"))
+
+ggpairs(avocado_residuals)
+```
+
+```{r}
+model_total <- lm(average_price ~ organic + month + year + total_volume, data = avocado)
+summary(model_total)
+```
+
+```{r}
+anova(model_year, model_total)
+```
+
+The final model includes average_price, organic, month, year, total_volume.
+
+On average organic avocado is 0.49 cents more expensive compared with conventional, with all other predictors held constant.
+
+One cent increase in price decrease the total volume of sold avocados by 5.576e-09, with all other predictors held constant.
+
+The volume doesnt have signifficant inpact on the average price.
+
+The avocados are on average 0.08 cents more expensive in June compared with other months, with all other predictors held constant.
+
+The avocados are on average 0.06 cents cheaper in February compared with other months, with all other predictors held constant.
+
+The average price of avocados was 0.10 cent higher in year 2017 compared to other years, with all other predictors held constant.
+
+```{r}
+calc.relimp(model_total, type = "lmg", rela = TRUE)
+```
+
+Proportion of variance explained by model: 47.62%.
+So, we see by this measure that organic is most important (accounting for 76% of r2), followed by month (12%), then year (7%), and finally the total volume (4%).
+
