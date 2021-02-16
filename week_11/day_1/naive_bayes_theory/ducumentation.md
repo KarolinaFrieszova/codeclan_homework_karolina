@@ -1,3 +1,7 @@
+|Author|Date|
+|---|---|
+|Karolina Frieszova|2021-02-16|
+
 # 1 Classification and clustering - two fields of machine learning
 
 ## 1.1 Differences
@@ -65,7 +69,7 @@ P(A) and P(B) is the independent probabilities of A and B.
 
 <img src = "www/example.png" width = "600" height = "">
 
-# 3 References
+# 3 Sources
 
 [Naive Bayes, Clearly Explained by StatQuest with Josh Starmer](https://www.youtube.com/watch?v=O2L2Uv9pdDA)
 
@@ -75,5 +79,6 @@ P(A) and P(B) is the independent probabilities of A and B.
 ](https://www.analyticsvidhya.com/blog/2021/01/a-guide-to-the-naive-bayes-algorithm/)
 
 [6 Easy Steps to Learn Naive Bayes Algorithm with codes in Python and R](https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/)
+
 
 
