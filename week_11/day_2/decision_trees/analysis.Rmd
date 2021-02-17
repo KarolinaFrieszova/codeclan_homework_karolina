@@ -1,0 +1,99 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(tidyverse)
+library(tidyverse)
+library(yardstick)
+
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+```
+
+# Data cleaning
+
+```{r}
+titanic_set <- titanic_set %>% 
+  select(-c("X1", "passenger_id", "name", "ticket", "cabin", "fare")) %>% 
+  filter(!is.na(survived)) %>% 
+  filter(!is.na(age)) %>% 
+  mutate(sex = as_factor(sex),
+         age = as.factor(if_else(age <= 16, "Child", "Adult")),
+         pclass = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")),
+         survived = factor(survived, levels = c(0,1), labels = c("Died", "Survived")),
+         embarked = as.factor(embarked)) %>% 
+  na.omit()
+
+summary(titanic_set)
+```
+# Decision tree
+
+```{r}
+# get how many rows are in our dataset
+n_data <- nrow(titanic_set)
+
+# how many rows test is going to take
+test_index <- sample(1:n_data, size = n_data * 0.2)
+
+# make our datasets
+titanic_test <- slice(titanic_set, test_index)
+titanic_train <- slice(titanic_set, -test_index)
+```
+
+```{r}
+titanic_fit <- rpart(survived ~ ., # chooseing what to compare to
+                     data = titanic_train,
+                     method = "class")
+
+titanic_fit
+```
+
+```{r}
+rpart.plot(titanic_fit, digits = 2, yesno = 2)
+```
+If character's sex is male then there is 42% probability of death. 
+If character's ticket class is Middle or Lower then there is 21% probability of death.
+If character's is adult then there is 16% probability of death.
+If character is a child and has three or more siblings on board then they probability of death is 37%.
+If children with siblings less than three and with at least one parent on board has probability of survival is 61%
+# Calculate accuracey
+
+```{r}
+titanic_test_pred <- titanic_test %>% 
+  add_predictions(titanic_fit, type = "class")
+
+conf_mat <- titanic_test_pred %>% 
+  conf_mat(truth = survived, estimate = pred)
+
+conf_mat
+```
+
+# Three measures to see how well the model is predicting
+
+```{r}
+titanic_test_pred %>% 
+  accuracy(truth = survived,
+           estimate = pred)
+
+```
+82% of predictions are correct.
+
+```{r}
+titanic_test_pred %>% 
+  sensitivity(truth = survived,
+              estimate = pred)
+```
+```{r}
+titanic_test_pred %>% 
+  specificity(truth = survived,
+              estimate = pred)
+```
+
