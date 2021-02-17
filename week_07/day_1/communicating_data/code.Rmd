@@ -1,0 +1,233 @@
+---
+title: "Communicating data"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tsibbledata)
+library(lubridate)
+library(tsibble)
+
+nyc_bikes_df <- nyc_bikes
+```
+
+```{r}
+test <- nyc_bikes %>%
+  mutate(date_new = date(start_time), 
+         bike_id_new = as.character(bike_id)) %>%
+  index_by(date_new) %>%
+  group_by(type) %>%
+  summarise(count = n())
+ggplot(test) + 
+  aes(x = date_new, y = count, group = type, color = type) + 
+  geom_line()
+test
+```
+
+```{r}
+test <- nyc_bikes %>%
+  mutate(month_new = month(start_time), 
+         bike_id_new = as.character(bike_id)) %>%
+  index_by(month_new) %>%
+  group_by(type) #%>%
+ # summarise(count = n())
+ggplot(test) + 
+  aes(x = month_new, group = type, color = type) + 
+  geom_histogram()
+test
+```
+
+
+```{r}
+nyc_bikes_df %>% 
+  group_by_key() %>% 
+  index_by(start_time2 = ~ as_date(.)) %>% 
+  summarise(num_sub = n(type = "Subscriber"),
+            num_cus = n(type = "Customer"))
+  
+```
+
+```{r}
+nyc_bikes_df %>%
+  mutate(
+    s_day = lubridate::wday(start_time, label = TRUE),
+    s_weekend = (start_time %in% c("Sun", "Sat"))
+  ) %>%
+  ggplot(aes(x = start_time, y = start_time, group = start_time)) +
+    geom_line(aes(col = s_weekend)) +
+    facet_grid(bike_id ~ .)
+```
+
+```{r}
+nyc_bikes_df %>%
+  mutate(start_time = lubridate::year(start_time)) %>%
+  index_by(start_time) %>%
+  group_by(type, birth_year, gender) %>%
+  summarise(count = sum(start_station)) %>%
+  ungroup()
+```
+
+```{r}
+nyc_bikes_df <- nyc_bikes_df %>% 
+  select(-c("start_lat", "start_long", "end_lat", "end_long")) %>% 
+  mutate(s_w_day = wday(start_time, week_start = 1, label = T, abbr = F),
+         s_month = month(start_time, label = T, abbr = F),
+         s_day = day(start_time))
+```
+
+```{r}
+index_var(nyc_bikes_df)
+key_vars(nyc_bikes_df)
+interval(nyc_bikes_df)
+
+nyc_bikes_df %>% 
+  filter_index("2018-01")
+
+nyc_bikes_df %>% 
+  select(s_month, type) %>% 
+  index_by(s_month) %>% 
+  summarise(count_sub = sum(type == "Subscriber"),
+            count_cus = sum(type == "Customer")) %>% 
+  ggplot()+
+  aes(x = s_month, group = type)+
+  geom_bar()
+
+
+
+nyc_bikes_df %>% 
+  select(s_month, type) %>% 
+  index_by(s_month) %>% 
+  summarise(count = n()) %>% 
+  ggplot()+
+  aes(x = s_month, y = count, group = type)+
+  geom_line()
+
+# You can also aggregate data to different time intervals using index_by(). For example, here are the mean temperatures for each day:
+nyc_bikes_df %>%
+  index_by(s_month = as_date(Time)) %>%
+  summarise(count = n())
+
+
+nyc_bikes_df %>%
+  index_by(month = month(start_time)) %>%
+  summarise(count = n(type))
+
+
+```
+
+```{r}
+nyc_bikes_df %>% 
+  group_by(s_month) %>% 
+  summarise(n())
+```
+
+```{r}
+nyc_bikes_df %>% 
+  mutate(age = 2018 - birth_year)
+```
+
+```{r}
+nyc_bikes_df %>% 
+  select(-c("start_lat", "start_long", "end_lat", "end_long")) %>% 
+  mutate(s_w_day = wday(start_time, week_start = 1, label = T, abbr = F),
+         s_month = month(start_time, label = T),
+         s_day = day(start_time),
+         year = year(start_time),
+         age = year - birth_year,
+         bike_id_char = as.character(bike_id)) %>% 
+  index_by(s_month) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_month, group = type, color = type)+
+  geom_histogram(stat="count")
+```
+
+```{r}
+nyc_bikes_df %>% 
+  select(start_time, type, bike_id, gender) %>% 
+  filter(gender %in% c("Male", "Female")) %>% 
+  mutate(s_month = month(start_time, label = T),
+         bike_id_char = as.character(bike_id)) %>% 
+  index_by(s_month) %>% 
+  group_by(gender) %>% 
+  ggplot()+
+  aes(x = s_month, group = gender, color = gender)+
+  geom_line(stat="count")
+
+nyc_bikes_df %>% 
+  select(start_time, type, bike_id) %>% 
+  mutate(s_month = month(start_time, label = T),
+         bike_id_char = as.character(bike_id)) %>% 
+  index_by(s_month) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_month, group = type, color = type)+
+  geom_histogram(stat="count")
+
+nyc_bikes_df %>% 
+  select(start_time, type, bike_id) %>% 
+  mutate(s_month = month(start_time, label = T),
+         bike_id_char = as.character(bike_id),
+         quarter = quarter(start_time)) %>% 
+  index_by(quarter) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = quarter, group = type, color = type)+
+  geom_histogram(stat="count")
+
+
+nyc_bikes_df %>% 
+  select(start_time, type, bike_id) %>% 
+  mutate(s_month = month(start_time, label = T),
+         s_w_day = wday(start_time, week_start = 1, label = T, abbr = F),
+         bike_id_char = as.character(bike_id),
+         quarter = quarter(start_time)) %>% 
+  index_by(s_w_day) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_w_day, group = type, color = type)+
+  geom_line(stat="count")
+
+nyc_bikes_ts %>% 
+  index_by(s_w_day) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = s_w_day, group = type, color = type)+
+  geom_line(stat="count")+
+  theme_bw()+
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  labs(title = "Weekly bike hires by trip type",
+       subtitle = "Annual trend\n",
+       x = "\nDays of the week",
+       y = "Frequency\n",
+       color = "Trip type")
+
+nyc_bikes_ts <- nyc_bikes %>% 
+  select(start_time, type, bike_id) %>% 
+  mutate(s_month = month(start_time, label = T),
+         s_w_day = wday(start_time, week_start = 1, label = T, abbr = F),
+         bike_id_char = as.character(bike_id),
+         quarter = quarter(start_time),
+         price = ifelse(type == "Subscriber", 0.50, 15))
+```
+
+```{r}
+# Quarterly
+
+nyc_bikes_ts %>% 
+  index_by(quarter) %>% 
+  group_by(type) %>% 
+  ggplot()+
+  aes(x = quarter, group = type, fill = type)+
+  geom_histogram(stat="count", colour = "black")+
+  theme_bw()+
+  labs(title = "Quarterly bike hires by trip type\n",
+       x = "\nQuarter",
+       y = "Frequency\n",
+       fill = "Trip type")+
+  scale_fill_manual(values = c("Customer" = "#d95f02",
+                               "Subscriber" = "#1b9e77"))
+```
+

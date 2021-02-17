@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tsibbledata)
+library(lubridate)
+library(tsibble)
+
+library(leaflet)
+```
+
+```{r}
+nyc_bikes
+# turn columns to numeric and remove NA values
+nyc_bikes_clean <- nyc_bikes %>%
+  select(start_lat, start_long, type) %>% 
+  mutate_at(vars(start_lat, start_long), as.numeric) %>%
+  filter(!is.na(start_long)) %>% 
+  filter(!is.na(start_lat)) %>% 
+  filter(!is.na(type))
+
+nyc_bikes_customer <- nyc_bikes_clean %>% 
+  filter(type == "Customer")
+
+nyc_bikes_subscriber <- nyc_bikes_clean %>% 
+  filter(type == "Subscriber")
+
+# create leaflet map
+leaflet(nyc_bikes_customer) %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~start_long,
+                   lat = ~start_lat,
+                   clusterOptions = markerClusterOptions())
+
+leaflet(nyc_bikes_subscriber) %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~start_long,
+                   lat = ~start_lat,
+                   clusterOptions = markerClusterOptions())
+```
+

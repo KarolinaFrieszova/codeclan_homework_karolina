@@ -3,7 +3,7 @@ title: "2.1 Market Basket Analysis"
 output: html_notebook
 ---
 
-# note: go over as incorrect
+# note: go over as incorrect 
 
 ```{r}
 library(tidyverse)

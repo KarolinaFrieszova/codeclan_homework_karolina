@@ -31,6 +31,7 @@ diamonds_price <- diamonds %>%
 
 ggpairs(diamonds_price)
 ```
+
 ```{r}
 diamonds_price %>%
   ggplot(aes(x = carat, y = price)) +

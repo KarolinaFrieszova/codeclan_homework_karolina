@@ -1,10 +1,4 @@
-library(tidyverse)
 library(shiny)
-library(CodeClanData)
-library(shinythemes)
-
-game_sales <- game_sales %>%
-    mutate(score = if_else(user_score >= 7, "Above 7", "Below 7"))
 
 shinyUI(fluidPage(
     

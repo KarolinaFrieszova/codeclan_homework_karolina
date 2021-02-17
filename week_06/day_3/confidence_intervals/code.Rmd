@@ -21,14 +21,16 @@ min(ames$sale_price)
 
 2. Sales distribution is right skewed
 ```{r}
+# histogram of sales
 ames %>% 
   ggplot(aes(x = sale_price))+
-  geom_histogram(col = "white")
+  geom_histogram(col = "white", fill = "steel blue", alpha = 0.7)
 ```
 
 3. 
 
 ```{r}
+# population parameter mean of sale_price
 mean_sale_price_ames <- ames %>% 
   summarise(mean_sale_price = mean(sale_price))
 ```

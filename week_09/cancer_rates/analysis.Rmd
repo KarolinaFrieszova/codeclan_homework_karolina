@@ -99,10 +99,10 @@ cancer_rates %>%
   coord_flip()+
   labs(y = "Incidences",
        x = "Cancer site",
-       title = "Cancer incidences by cancer site (2008-2018)",
+       title = "Cancer incidences by cancer site",
        subtitle = "with 50 and less registered incidences per year")+
   theme_bw()
-
+ggsave("p.png")
 ```
 
 Annual difference in instances of all ages and sex.

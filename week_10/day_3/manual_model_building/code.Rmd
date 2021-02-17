@@ -41,6 +41,9 @@ alias(lm(price ~ ., data = kc_housing))
 summary(kc_housing)
 ```
 
+
+
+
 # Systematically build a regression model 
 
 ```{r}

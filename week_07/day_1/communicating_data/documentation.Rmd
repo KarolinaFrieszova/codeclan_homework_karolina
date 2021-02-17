@@ -140,7 +140,7 @@ Therefore, I would suggest 'CitiBike' to schedule any annual repair for February
 
 There is a significant pattern difference between bike rider by the demographics of trip type. I would suggest to explore options of increasing sales of the short-term passes.
 
-Our bicycle start points were relatively concentrated baring in mind the spread of New Your City.
+Our bicycle start points were relatively concentrated baring in mind the spread of New Your City. This graph gives us an overall idea of the bike stations spread.
 
 
 

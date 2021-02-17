@@ -1,4 +1,10 @@
 library(shiny)
+library(tidyverse)
+library(CodeClanData)
+library(shinythemes)
+
+game_sales <- game_sales %>%
+  mutate(score = if_else(user_score >= 7, "Above 7", "Below 7"))
 
 shinyServer(function(input, output) {
 
