@@ -1,0 +1,133 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(broom)
+library(factoextra)
+library(cluster)
+```
+
+```{r}
+mall_customers <- read_csv("data/mall_customers.csv") %>% 
+  clean_names() %>% 
+  mutate(gender = as_factor(gender))
+
+summary(mall_customers)
+```
+
+# exploratory analysis on the data
+
+```{r}
+mall_customers %>% 
+  ggplot()+
+  aes(x = annual_income_k, y = spending_score_1_100)+
+  geom_point()
+```
+
+```{r}
+mall_customers %>% 
+  ggplot()+
+  aes(x = age, y = spending_score_1_100, color = gender)+
+  geom_point()
+```
+
+Boths genders' score after 40s is below 70.
+
+# Clustering process on spending score and annual income
+
+```{r}
+target <- mall_customers %>% 
+  select(annual_income_k, spending_score_1_100)
+```
+
+```{r}
+target %>%
+  as_tibble() %>%
+  pivot_longer(cols = c(annual_income_k, spending_score_1_100), 
+               names_to = "type", 
+               values_to = "value") %>% 
+  group_by(type)%>%
+  summarise(mean = round(mean(value)), 
+            sd = sd(value))
+```
+
+```{r}
+target_scale <- target %>%
+  as_tibble() %>%
+  pivot_longer(cols = c(annual_income_k, spending_score_1_100), 
+               names_to = "type", 
+               values_to = "value") %>% 
+  mutate_if(is.numeric, scale)
+```
+
+```{r}
+# using broom package
+max_k <- 20 
+
+k_clusters <- tibble(k = 1:max_k) %>%
+  mutate(
+    kclust = map(k, ~ kmeans(target, .x, nstart = 25)), 
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, target)
+  )
+
+k_clusters
+```
+
+```{r}
+clusterings <- k_clusters %>%
+  unnest(glanced)
+
+clusterings
+```
+
+```{r}
+ggplot(clusterings, aes(x = k, y= tot.withinss)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(1, 25, by = 1))
+```
+
+```{r}
+# library cluster
+
+cluster_list_k5 <- clusterings %>% 
+  unnest(augmented) %>%
+  filter(k == 5) %>%
+  select(.cluster) %>%
+  pull()
+
+sil <- silhouette(as.numeric(cluster_list_k5), 
+                  dist(target_scale))
+
+fviz_silhouette(sil)
+
+fviz_nbclust(target_scale, 
+             kmeans, 
+             method = "silhouette", 
+             nstart = 25)
+```
+
+```{r}
+clusterings %>% 
+  unnest(cols = c(augmented)) %>%
+  filter(k == 5) %>%
+  ggplot(aes(x = annual_income_k, y = spending_score_1_100, colour = .cluster, label = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  geom_text(hjust = 0, vjust = - 0.5, size = 3)
+```
+
+```{r}
+clusterings %>% 
+  unnest(augmented) %>%
+  filter(k == 5) %>%
+  group_by(.cluster) %>%
+  summarise(mean(annual_income_k), mean(spending_score_1_100))
+```
+
+In order to create a marketing campaign to target customers based on their spending score and annual income our clustering method did relatively good job. We will be able to create tailored offers based on their income and spending score.
