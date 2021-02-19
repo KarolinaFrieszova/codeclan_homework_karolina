@@ -32,7 +32,7 @@ phones %>%
   arrange(desc(count))
 ```
 
-2. 
+2. Find the brand with the highest numbers of phones in the dataset.
 ```{r}
 phones %>% 
   group_by(brand) %>% 
@@ -101,6 +101,8 @@ samsung_phones %>%
 - unimodal
 - not skewed
 
+It’s a reasonable fit: the distribution is roughly bell-shaped. The main problems seem to be a larger number of ratings in the tails of the distribution than are predicted by the normal, at ratings 1, 2 and 5
+
 4.
 
 ```{r}
@@ -145,4 +147,4 @@ samsung_phones %>%
 qqnorm(samsung_phones$rating)
 qqline(samsung_phones$rating)
 ```
-
+Here we see significant deviations from straight line in the tails, so the data is not very well approximated as normal.
