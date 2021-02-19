@@ -7,6 +7,7 @@ output: html_notebook
 library(prob)
 library(gtools)
 library(tidyverse)
+library(janitor)
 ```
 
 ```{r}
@@ -39,9 +40,8 @@ titanic %>%
   filter(crew == T & survived == "yes") %>% 
   summarise(survived_crew_count = n())
 ```
+prob(survived | crew)
 ```{r}
-211/890
-
 titanic %>%
   filter(crew) %>%
   summarise(prob = sum(survived == "yes") / n())
@@ -52,18 +52,6 @@ The proportion of crew that survived was 24%.
 
 prob(survived | passenger)
 ```{r}
-titanic %>% 
-  filter(crew == F) %>% 
-  summarise(crew_count = n())
-```
-```{r}
-titanic %>% 
-  filter(crew == F & survived == "yes") %>% 
-  summarise(survived_crew_count = n())
-```
-```{r}
-500/1317
-
 titanic %>%
   filter(!crew) %>%
   summarise(prob = sum(survived == "yes") / n())
@@ -73,13 +61,25 @@ The proportion of passengers that survived was 38%.
 
 So passengers were 1.6 times more likely to have survived the disaster than crew.
 
+```{r}
+# the appropriate contingency table
+titanic %>%
+  janitor::tabyl(crew, survived) %>%
+  adorn_totals(where = c("row", "col")) %>%
+  adorn_percentages(denominator = "all") %>%
+  adorn_rounding(digits = 2) %>%
+  adorn_title()
+```
+
+
 1. If I roll a six-sided dice once, what is the probability of getting a number less than 5?
 
 ```{r}
-rolldie(1) %>% 
+S <- rolldie(1)
+S_less_5 <- S %>% 
   filter(X1 < 5)
 
-4/6 # 2/3
+nrow(S_less_5) /nrow(S)
 ```
 
 2. How many outcomes are there in the sample space of an experiment in which we roll three dice?
@@ -87,6 +87,7 @@ rolldie(1) %>%
 - 216 possible outcomes if we roll three dice
 ```{r}
 6*6*6
+
 rolldie(3) %>% 
   nrow()
 ```
@@ -102,27 +103,11 @@ ii.
 what is the probability of this event?
 
 ```{r}
-34/1296
-```
-
-# alternative way
-
-```{r}
-S <- rolldie(4)
-
-# add total random variable
-S <- S %>%
-  mutate(total = rowSums(.))
-
-# the total of the four dice equals 5, 6 or 7)
-S_total_between_5_7 <- S %>%
+S <- rolldie(4) %>% 
+  mutate(total = X1 + X2 + X3 + X4) %>% 
   filter(total %in% c(5, 6, 7))
 
-nrow(S_total_between_5_7)
-
-# probability of this event
-prob <-nrow(S_total_between_5_7) / nrow(S)
-prob
+nrow(S) / nrow(rolldie(4))
 ```
 
 iii.
@@ -130,18 +115,6 @@ All assumptions are fair.
 We assume all outcomes in the sample space are equally likely!
 
 4. Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
-
-```{r}
-permutations(
-  n = 5,
-  r = 5) %>% 
-  as_tibble() %>% 
-  nrow()
-
-1/120
-```
-
-# alternative way
 
 ```{r}
 # number of ordered arrangements:
@@ -156,16 +129,8 @@ prob_perfect_order
 i. what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right? - 1/46656
 
 ```{r}
-rolldie(6)
-1/46656
-```
-# alternative ways
-
-```{r}
 S <- rolldie(6)
-
-prob <- 1 / nrow(S)
-prob
+1/nrow(S)
 
 # or
 S_in_order <- S %>%
