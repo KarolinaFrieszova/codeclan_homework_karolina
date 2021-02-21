@@ -1,0 +1,152 @@
+---
+title: "Text Mining"
+output: html_notebook
+---
+
+```{r}
+library(janeaustenr)
+library(tidytext)
+library(tidyverse)
+library(ggwordcloud)
+library(ggrepel)
+```
+
+# 1
+Find the most common words in both Pride & Prejudice and Sense & Sensibility
+
+```{r}
+# create tibble with words from book
+pride_prejudice <- tibble(
+  text = prideprejudice
+) %>% 
+  unnest_tokens(word, text) %>% # splits tibble into tokens/words
+  count(word, sort = TRUE) # "group by' word and arrange - descending
+
+sense_sensibility <- tibble(
+  text = sensesensibility
+) %>% 
+  unnest_tokens(word, text) %>% 
+  count(word, sort = TRUE)
+
+# visualise words with frequency over 1000
+ggwordcloud( 
+  words = pride_prejudice$word,
+  freq = pride_prejudice$n,
+  min.freq = 1000
+)
+
+ggwordcloud(
+  words = sense_sensibility$word,
+  freq = sense_sensibility$n,
+  min.freq = 1000
+)
+```
+# 2
+Find the most common words in both Pride & Prejudice and Sense & Sensibility, not including stop words.
+
+```{r}
+pride_prejudice_sw <- tibble(
+  text = prideprejudice
+) %>% 
+  unnest_tokens(word, text) %>% 
+  count(word, sort = TRUE) %>% 
+  anti_join(stop_words, by = "word") # remove stop words
+
+sense_sensibility_sw <- tibble(
+  text = sensesensibility
+) %>% 
+  unnest_tokens(word, text) %>% 
+  count(word, sort = TRUE) %>% 
+  anti_join(stop_words, by = "word")
+
+# visualise most common words in book
+pride_prejudice_sw %>%
+  top_n(80) %>% 
+  ggplot() + 
+  geom_text_wordcloud_area(aes(label = word, size = n)) +
+  scale_size_area(max_size = 15)
+
+sense_sensibility_sw %>%
+  top_n(80) %>% 
+  ggplot() + 
+  geom_text_wordcloud_area(aes(label = word, size = n)) +
+  scale_size_area(max_size = 15)
+```
+
+
+# 3
+Find the most common sentiment words in both Pride & Prejudice and Sense & Sensibility.
+
+```{r}
+# add sentiment to words
+sentiment_pride <- pride_prejudice_sw %>% 
+  inner_join(get_sentiments("loughran"), by = "word")
+
+sentiment_sense <- sense_sensibility_sw %>% 
+  inner_join(get_sentiments("loughran"), by = "word")
+
+# bar graph with most commonly used verbs in a book, categorised/ colored by sentiment 
+sentiment_pride %>% 
+  filter(!word == "miss") %>% # exclude miss as it is outlier and categorised as negative even though in the book it is mainly used as Miss and not not as a verb
+  slice_max(n, n = 20) %>% 
+  ggplot()+
+  aes(x = reorder(word, n), y = n, group = sentiment, fill = sentiment)+
+  geom_col(col = "white")+
+  coord_flip()+
+  scale_fill_brewer(palette="Set1")+
+  theme_bw()
+
+sentiment_sense %>% 
+  filter(!word == "miss") %>% 
+  slice_max(n, n = 20) %>% 
+  ggplot()+
+  aes(x = reorder(word, n), y = n, group = sentiment, fill = sentiment)+
+  geom_col(col = "white")+
+  coord_flip()+
+  scale_fill_brewer(palette="Set1")+
+  theme_bw()
+
+# join two book tables together and add a binary sentiment
+pride_and_sense <- inner_join(pride_prejudice, sense_sensibility, by = "word")
+sentiment_pride_and_sense <- pride_and_sense %>% 
+  inner_join(get_sentiments("bing"), by = "word")
+
+# add new column to the table with with average word value, print ten most used words
+sentiment_pride_and_sense %>% 
+  mutate(most_common = round(n.x = n.y)/2) %>% 
+  slice_max(most_common, n = 10)
+
+```
+# 4
+Compare on scatter plot
+
+```{r}
+pride_prejudice_df <- pride_prejudice_sw %>% 
+  mutate(book = "pride_prejudice") %>% # add book name column to the table
+  slice_max(n, n = 150) # select top 150 words
+
+sense_sensibility_df <- sense_sensibility_sw %>% 
+  mutate(book = "sense_senbibility") %>% 
+  slice_max(n, n = 150)
+
+# bind tables with top words from two books
+books <- bind_rows(pride_prejudice_df, sense_sensibility_df)
+books <- books %>% 
+  filter(!word == "miss") %>% # filter out miss again
+  inner_join(get_sentiments("afinn"), by = "word") # add numerical sentiment column
+
+
+# visualise the most common words by sentiment per book
+ggplot(books)+
+  aes(x = value, y = n, label = word, color = book)+
+  geom_point()+
+  ggrepel::geom_label_repel()+
+  theme_bw()+
+  labs(x = "sentiment value",
+       y = "word count",
+       title = "The most common sentiment words by book")+
+  coord_flip()+
+  scale_color_brewer(palette="Dark2")+
+  theme(legend.position = "bottom")
+```
+
