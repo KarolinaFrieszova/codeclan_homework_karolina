@@ -7,54 +7,110 @@ output: html_notebook
 
 ```{r}
 library(tidyverse)
-library(janitor)
 
-transactions <- read_csv("data/online_retail_subset.csv") %>% 
-  clean_names()
+transactions <- read_csv("data/online_retail_subset.csv")
 ```
 
 # Association rules
 
-sup(A) = P(A) = number of transactions involving A / total number of transactions
-
+1. Calculate the support for item A (this will be the support for a single item)
 ```{r}
-count_transactions <- transactions %>% 
-  distinct(invoice_no) %>% 
-  summarise(n())
+total_transactions <- transactions %>%
+  summarise(n = n_distinct(InvoiceNo)) %>%
+  flatten_dbl()
 
-count_transactions
-
-# 1. Calculate the support for item A
-
-# assuming that 1 transaction has 1 ctoce_code
-
-support_a <- transactions %>% 
-  filter(stock_code == "22469") %>% 
-  summarise(n() / count_transactions)
+support_a <- transactions %>%
+  filter(StockCode == 22469) %>%
+  summarise(prop_invoices_with_item = n_distinct(InvoiceNo) / total_transactions)
 
 support_a
+```
+So item A is purchased in 7.7% of transactions.
 
-# 2. Calculate the support and confidence for rule (A→B)
 
-support_a_b <- transactions %>% 
-  filter(stock_code %in% c("21110", "22469")) %>% 
-  summarise(n() / count_transactions)
+2. Calculate the support and confidence for rule (A→B).
 
+
+```{r}
+trans_feat_a <- transactions %>%
+  filter(StockCode == "22469") %>%
+  distinct(InvoiceNo)
+
+trans_feat_b <- transactions %>%
+  filter(StockCode == "21110") %>%
+  distinct(InvoiceNo)
+
+trans_feat_a_b <- trans_feat_a %>%
+  inner_join(trans_feat_b, by = "InvoiceNo")
+
+support_a_b <- trans_feat_a_b %>%
+  summarise(prop_with_a_b = n() / total_transactions)
 support_a_b
+```
+```{r}
+confidence_a_b <- support_a_b / support_a
+confidence_a_b
+```
+```{r}
+support_a_b <- transactions %>%
+  filter(StockCode == "22469" | StockCode == "21110") %>%
+  group_by(InvoiceNo, StockCode) %>% #group by in case cases where more than one stock in a purchase
+  summarise(count_of_item = n()) %>% 
+  group_by(InvoiceNo) %>%
+  summarise(count_of_A_and_B = n()) %>%
+  filter(count_of_A_and_B > 1) %>%
+  summarise(prop_with_A_and_B = n()/total_transactions)
+support_a_b 
+```
+```{r}
+confidence_a_b <- support_a_b / support_a
 
-# incorrect
-
-confidence_a_b <- transactions %>% 
-  filter(stock_code %in% c("21110", "22469")) %>% 
-  group_by(invoice_no) %>% 
-  mutate(count = n()) %>% 
-  filter(count == 2) %>% 
-  summarise(n())
-
-
-
-
+confidence_a_b
 ```
 
+So, if someone buys item A there is an 4.6% probability that they will then buy item B.
 
+
+# Alriori algorithm
+
+```{r}
+library(arules)
+library(arulesViz)
+```
+
+```{r}
+transactions_reformat <- transactions %>%
+  select(InvoiceNo, Description) %>%
+  na.omit()
+
+write_csv(transactions_reformat, "transactions_reformat.csv")
+
+apriori_format <- read.transactions("transactions_reformat.csv", format = "single", sep = ",", header = TRUE, cols = c("InvoiceNo", "Description"))
+```
+```{r}
+inspect(head(apriori_format))
+```
+
+```{r}
+#can take a look at top frequency items
+itemFrequencyPlot(apriori_format, topN=20, type="absolute")
+```
+
+```{r}
+rules <- apriori(apriori_format, parameter = list(supp = 0.01, conf = 0.8))
+```
+
+```{r}
+rules <- sort(rules, by = 'confidence', decreasing = TRUE)
+summary(rules)
+```
+
+```{r}
+top_10 <- rules[1:10]
+inspect(top_10)
+```
+
+```{r}
+plot(top_10)
+```
 

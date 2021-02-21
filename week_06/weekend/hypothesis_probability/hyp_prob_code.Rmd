@@ -109,7 +109,7 @@ p_value
 # Conclusion
 
 p-value (0.111) > α (0.05) 
- We fail to reject the Null Hypothesis.
+We fail to reject the Null Hypothesis.
 
 We can conclude that there is not enough evidence in our data to suggest that omnivores sleep on average for significantly longer than herbivores.
 
