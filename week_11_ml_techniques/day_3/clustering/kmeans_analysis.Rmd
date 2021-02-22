@@ -45,23 +45,8 @@ target <- mall_customers %>%
 ```
 
 ```{r}
-target %>%
-  as_tibble() %>%
-  pivot_longer(cols = c(annual_income_k, spending_score_1_100), 
-               names_to = "type", 
-               values_to = "value") %>% 
-  group_by(type)%>%
-  summarise(mean = round(mean(value)), 
-            sd = sd(value))
-```
-
-```{r}
 target_scale <- target %>%
-  as_tibble() %>%
-  pivot_longer(cols = c(annual_income_k, spending_score_1_100), 
-               names_to = "type", 
-               values_to = "value") %>% 
-  mutate_if(is.numeric, scale)
+  mutate_all(scale)
 ```
 
 ```{r}
@@ -70,13 +55,13 @@ max_k <- 20
 
 k_clusters <- tibble(k = 1:max_k) %>%
   mutate(
-    kclust = map(k, ~ kmeans(target, .x, nstart = 25)), 
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, target)
+    kclust = map(k, ~ kmeans(target, .x, nstart = 25)), # model
+    tidied = map(kclust, tidy), # store tidy version
+    glanced = map(kclust, glance), # store glance staff
+    augmented = map(kclust, augment, target) # cluster info +data
   )
 
-k_clusters
+k_clusters # ideally save this with r data or rds
 ```
 
 ```{r}

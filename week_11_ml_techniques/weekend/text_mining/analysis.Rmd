@@ -141,7 +141,7 @@ ggplot(books)+
   aes(x = value, y = n, label = word, color = book)+
   geom_point()+
   ggrepel::geom_label_repel()+
-  theme_bw()+
+  theme_classic()+
   labs(x = "sentiment value",
        y = "word count",
        title = "The most common sentiment words by book")+

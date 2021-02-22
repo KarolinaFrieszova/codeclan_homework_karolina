@@ -1,0 +1,48 @@
+---
+title: "Logistic Regression"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(pROC)
+library(caret)
+library(glmulti)
+library(broom)
+```
+
+```{r}
+orange_juice <- read_csv("data/orange_juice.csv") %>% 
+  clean_names() %>% 
+  mutate(purchase = as_factor(purchase)) %>% 
+  mutate(purchase_mm = ifelse(purchase == "CH", TRUE, FALSE)) %>% 
+  mutate(store_id = as_factor(store_id)) %>% 
+  select(-c(store7, store)) %>% 
+  mutate(special_ch = as.factor(special_ch)) %>% 
+  mutate(special_mm = as.factor(special_mm)) %>% 
+  select(-c(sale_price_ch, list_price_diff, price_diff, sale_price_mm))
+  
+```
+
+```{r}
+alias(purchase_mm ~ ., data = orange_juice)
+
+```
+
+```{r}
+multi_logreg_model <- glm(purchase ~ weekof_purchase + store_id + price_ch + 
+    price_mm + disc_ch + disc_mm + special_ch + special_mm + 
+    loyal_ch + pct_disc_mm + pct_disc_ch, data = orange_juice, family = binomial(link = 'logit'))
+
+tidy_out <- clean_names(tidy(multi_logreg_model))
+glance_out <- clean_names(glance(multi_logreg_model))
+tidy_out
+```
+
+```{r}
+orange_juice <- orange_juice %>% 
+  select(c(purchase, price_mm, price_ch, disc_mm, loyal_ch, pct_disc_mm))
+```
+
+
