@@ -9,6 +9,7 @@ library(tidytext)
 library(tidyverse)
 library(ggwordcloud)
 library(ggrepel)
+library(wordcloud)
 ```
 
 # 1
@@ -71,6 +72,10 @@ sense_sensibility_sw %>%
   ggplot() + 
   geom_text_wordcloud_area(aes(label = word, size = n)) +
   scale_size_area(max_size = 15)
+
+# visualisation using wordcloud package
+pride_prejudice_sw %>% 
+  with(wordcloud(word, n, max.words = 50))
 ```
 
 
@@ -148,5 +153,51 @@ ggplot(books)+
   coord_flip()+
   scale_color_brewer(palette="Dark2")+
   theme(legend.position = "bottom")
+```
+
+
+# 5 Analysing the sentiment towards the two characters
+
+```{r}
+pride <- tibble(
+  text = prideprejudice
+)
+pride_bigrams <- pride %>% 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+
+pride_bigrams %>% 
+  count(bigram, sort = TRUE)
+```
+
+```{r}
+bigrams_separated <- pride_bigrams %>% 
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+bigrams_filtered <- bigrams_separated %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word)
+
+bigram_counts <- bigrams_filtered %>% 
+  count(word1, word2, sort = TRUE)
+
+bigram_counts
+```
+
+```{r}
+bigrams_united <- bigrams_filtered %>% 
+  filter(word2 == "elizabeth") %>% 
+  unite(bigram, word1, word2, sep = " ")
+
+bigrams_united %>% 
+    count(bigram, sort = TRUE)
+```
+
+```{r}
+bigrams_darcy <- bigrams_filtered %>% 
+  filter(word2 == "darcy") %>% 
+  unite(bigram, word1, word2, sep = " ")
+
+bigrams_darcy %>% 
+  count(bigram, sort = TRUE)
 ```
 
